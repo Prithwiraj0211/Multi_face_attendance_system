@@ -1,0 +1,282 @@
+/* Fullscreen Attendance Terminal Kiosk Styles */
+.kiosk-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  background: #060913;
+  position: relative;
+}
+
+/* Kiosk Top HUD Bar */
+.kiosk-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 36px;
+  background: rgba(10, 15, 29, 0.7);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border-glass);
+  z-index: 10;
+}
+
+.kiosk-branding {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.kiosk-logo-badge {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #6366f1, #06b6d4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  box-shadow: 0 0 20px rgba(99, 102, 241, 0.4);
+}
+
+.kiosk-title h1 {
+  font-size: 1.25rem;
+  letter-spacing: -0.01em;
+}
+
+.kiosk-title p {
+  font-size: 0.76rem;
+  color: var(--accent-cyan);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 700;
+}
+
+.kiosk-clock-block {
+  text-align: right;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.kiosk-time {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 1.8rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: #fff;
+  text-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+}
+
+.kiosk-date {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+/* Main Body Layout */
+.kiosk-body {
+  display: flex;
+  flex: 1;
+  padding: 24px 36px;
+  gap: 28px;
+  overflow: hidden;
+}
+
+/* Live Video Viewport */
+.kiosk-stream-panel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  background: #080c18;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-glass);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6);
+  overflow: hidden;
+}
+
+.video-container {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #03050a;
+}
+
+.live-feed-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Futuristic Scanline Effect */
+.scanline {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background: linear-gradient(90deg, transparent, rgba(6, 182, 212, 0.6), transparent);
+  box-shadow: 0 0 15px rgba(6, 182, 212, 0.8);
+  pointer-events: none;
+  animation: scan 4s ease-in-out infinite alternate;
+}
+
+@keyframes scan {
+  0% { top: 2%; opacity: 0.3; }
+  50% { opacity: 0.8; }
+  100% { top: 96%; opacity: 0.3; }
+}
+
+/* Side Ticker / Event Drawer */
+.kiosk-ticker-panel {
+  width: 360px;
+  display: flex;
+  flex-direction: column;
+  background: rgba(14, 21, 38, 0.65);
+  backdrop-filter: blur(18px);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-glass);
+  padding: 20px;
+  gap: 16px;
+}
+
+.ticker-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--border-glass);
+}
+
+.ticker-header h3 {
+  font-size: 0.95rem;
+  letter-spacing: -0.01em;
+}
+
+.ticker-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  overflow-y: auto;
+  flex: 1;
+  padding-right: 4px;
+}
+
+.ticker-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  background: rgba(22, 33, 58, 0.7);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-md);
+  animation: slideInRight 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform 0.2s;
+}
+
+@keyframes slideInRight {
+  from { opacity: 0; transform: translateX(30px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+.ticker-avatar {
+  width: 42px;
+  height: 42px;
+  border-radius: 10px;
+  object-fit: cover;
+  background: #1e293b;
+  border: 1px solid var(--border-glass);
+  flex-shrink: 0;
+}
+
+.ticker-details {
+  flex: 1;
+  min-width: 0;
+}
+
+.ticker-name {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ticker-meta {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+}
+
+.ticker-badge-col {
+  text-align: right;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+}
+
+.ticker-time {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+/* Floating Center HUD Toast */
+.kiosk-toast-overlay {
+  position: absolute;
+  top: 40px;
+  left: 50%;
+  transform: translateX(-50%) translateY(-20px);
+  background: rgba(14, 22, 42, 0.92);
+  backdrop-filter: blur(24px);
+  border: 1px solid rgba(16, 185, 129, 0.5);
+  box-shadow: 0 10px 40px rgba(16, 185, 129, 0.25);
+  border-radius: var(--radius-lg);
+  padding: 16px 28px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 50;
+}
+
+.kiosk-toast-overlay.active {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+.kiosk-toast-avatar {
+  width: 52px;
+  height: 52px;
+  border-radius: 12px;
+  border: 2px solid var(--accent-emerald);
+  object-fit: cover;
+}
+
+.kiosk-toast-info h4 {
+  font-size: 1.1rem;
+  color: #fff;
+}
+
+.kiosk-toast-info p {
+  font-size: 0.82rem;
+  color: #34d399;
+  font-weight: 600;
+}
+
+/* Kiosk Bottom Navigation */
+.kiosk-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 36px;
+  background: rgba(8, 12, 24, 0.8);
+  border-top: 1px solid var(--border-glass);
+}

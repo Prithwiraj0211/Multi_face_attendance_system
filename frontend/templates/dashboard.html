@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard - {{ project_name }}</title>
+  <link rel="stylesheet" href="/static/css/base.css">
+  <link rel="stylesheet" href="/static/css/dashboard.css">
+</head>
+<body>
+  <div class="dashboard-layout">
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-icon">
+          <svg class="ui-icon ui-icon-md" viewBox="0 0 24 24" style="color: #fff;">
+            <path d="M3 7V5a2 2 0 0 1 2-2h2"></path>
+            <path d="M17 3h2a2 2 0 0 1 2 2v2"></path>
+            <path d="M21 17v2a2 2 0 0 1-2 2h-2"></path>
+            <path d="M7 21H5a2 2 0 0 1-2-2v-2"></path>
+            <circle cx="12" cy="12" r="3"></circle>
+            <path d="m16 16-.9-.9"></path>
+          </svg>
+        </div>
+        <div class="brand-text">
+          <h2>VisionPass</h2>
+          <span>Multi-Face AI</span>
+        </div>
+      </div>
+
+      <ul class="nav-menu">
+        <li class="nav-item active">
+          <a href="#" data-tab="overview">
+            <span class="nav-icon">
+              <svg class="ui-icon ui-icon-sm" viewBox="0 0 24 24">
+                <rect width="7" height="9" x="3" y="3" rx="1"></rect>
+                <rect width="7" height="5" x="14" y="3" rx="1"></rect>
+                <rect width="7" height="9" x="14" y="12" rx="1"></rect>
+                <rect width="7" height="5" x="3" y="16" rx="1"></rect>
+              </svg>
+            </span>
+            Overview & Analytics
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="#" data-tab="employees">
+            <span class="nav-icon">
+              <svg class="ui-icon ui-icon-sm" viewBox="0 0 24 24">
+                <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+                <circle cx="9" cy="7" r="4"></circle>
+                <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
+                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+              </svg>
+            </span>
+            Employees & Faces
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="#" data-tab="attendance">
+            <span class="nav-icon">
+              <svg class="ui-icon ui-icon-sm" viewBox="0 0 24 24">
+                <path d="M8 2v4"></path>
+                <path d="M16 2v4"></path>
+                <rect width="18" height="18" x="3" y="4" rx="2"></rect>
+                <path d="M3 10h18"></path>
+                <path d="m9 16 2 2 4-4"></path>
+              </svg>
+            </span>
+            Attendance Records
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="#" data-tab="settings">
+            <span class="nav-icon">
+              <svg class="ui-icon ui-icon-sm" viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="3"></circle>
+                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+              </svg>
+            </span>
+            Camera & Database
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="#" data-tab="security">
+            <span class="nav-icon">
+              <svg class="ui-icon ui-icon-sm" viewBox="0 0 24 24">
+                <rect width="18" height="11" x="3" y="11" rx="2" ry="2"></rect>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+              </svg>
+            </span>
+            Admins & Security
+          </a>
+        </li>
+      </ul>
+
+      <div class="sidebar-footer">
+        <a href="/kiosk" target="_blank" class="btn btn-primary btn-sm" style="width: 100%; margin-bottom: 12px;">
+          <svg class="ui-icon ui-icon-xs" viewBox="0 0 24 24">
+            <rect width="20" height="14" x="2" y="3" rx="2"></rect>
+            <line x1="8" y1="21" x2="16" y2="21"></line>
+            <line x1="12" y1="17" x2="12" y2="21"></line>
+          </svg>
+          Open Live Kiosk
+        </a>
+        <button id="btn-logout" class="btn btn-secondary btn-sm" style="width: 100%;">
+          <svg class="ui-icon ui-icon-xs" viewBox="0 0 24 24">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+            <polyline points="16 17 21 12 16 7"></polyline>
+            <line x1="21" y1="12" x2="9" y2="12"></line>
+          </svg>
+          Sign Out
+        </button>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-wrapper">
+      <header class="top-bar">
+        <div class="top-bar-left">
+          <h1>Admin Control Center</h1>
+          <p>Authenticated as <strong>{{ admin_user }}</strong> | Biometric Verification Engine</p>
+        </div>
+        <div class="top-bar-actions">
+          <span id="db-status-badge" class="badge {{ 'badge-success' if db_info.is_postgres else 'badge-warning' }}">
+            {{ db_info.type }} Database Active
+          </span>
+          <a href="/kiosk" class="btn btn-secondary btn-sm">
+            <svg class="ui-icon ui-icon-xs" viewBox="0 0 24 24">
+              <rect width="20" height="14" x="2" y="3" rx="2"></rect>
+              <line x1="8" y1="21" x2="16" y2="21"></line>
+              <line x1="12" y1="17" x2="12" y2="21"></line>
+            </svg>
+            Launch Kiosk
+          </a>
+        </div>
+      </header>
+
+      <div class="content-container">
+
+        <!-- TAB 1: OVERVIEW -->
+        <section id="overview" class="tab-panel active">
+          <!-- Metrics Grid -->
+          <div class="metrics-grid">
+            <div class="metric-card glass-panel">
+              <div class="metric-header">
+                <span class="metric-title">Total Employees</span>
+                <div class="metric-icon-wrap icon-purple">
+                  <svg class="ui-icon ui-icon-sm" viewBox="0 0 24 24">
+                    <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="9" cy="7" r="4"></circle>
+                    <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
+                    <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                  </svg>
+                </div>
+              </div>
+              <div class="metric-value" id="stat-total-emp">0</div>
+              <div class="metric-footer">Registered in system</div>
+            </div>
+
+            <div class="metric-card glass-panel">
+              <div class="metric-header">
+                <span class="metric-title">Today's Check-Ins</span>
+                <div class="metric-icon-wrap icon-emerald">
+                  <svg class="ui-icon ui-icon-sm" viewBox="0 0 24 24">
+                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                    <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                  </svg>
+                </div>
+              </div>
+              <div class="metric-value" id="stat-today-checkins">0</div>
+              <div class="metric-footer">Unique staff scanned today</div>
+            </div>
+
+            <div class="metric-card glass-panel">
+              <div class="metric-header">
+                <span class="metric-title">Currently On-Site</span>
+                <div class="metric-icon-wrap icon-cyan">
+                  <svg class="ui-icon ui-icon-sm" viewBox="0 0 24 24">
+                    <rect width="16" height="20" x="4" y="2" rx="2" ry="2"></rect>
+                    <path d="M9 22v-4h6v4"></path>
+                    <path d="M8 6h.01"></path>
+                    <path d="M16 6h.01"></path>
+                    <path d="M12 6h.01"></path>
+                    <path d="M12 10h.01"></path>
+                    <path d="M12 14h.01"></path>
+                    <path d="M16 10h.01"></path>
+                    <path d="M16 14h.01"></path>
+                    <path d="M8 10h.01"></path>
+                    <path d="M8 14h.01"></path>
+                  </svg>
+                </div>
+              </div>
+              <div class="metric-value" id="stat-currently-present">0</div>
+              <div class="metric-footer">Active inside premises</div>
+            </div>
+
+            <div class="metric-card glass-panel">
+              <div class="metric-header">
+                <span class="metric-title">Attendance Rate</span>
+                <div class="metric-icon-wrap icon-amber">
+                  <svg class="ui-icon ui-icon-sm" viewBox="0 0 24 24">
+                    <line x1="18" y1="20" x2="18" y2="10"></line>
+                    <line x1="12" y1="20" x2="12" y2="4"></line>
+                    <line x1="6" y1="20" x2="6" y2="14"></line>
+                  </svg>
+                </div>
+              </div>
+              <div class="metric-value" id="stat-attendance-rate">0%</div>
+              <div class="metric-footer">Staff punctuality metric</div>
+            </div>
+          </div>
+
+          <!-- Video Stream Preview & Recent Logs Row -->
+          <div style="display: grid; grid-template-columns: 1fr 1.4fr; gap: 24px;">
+            <div class="glass-panel" style="padding: 20px; display: flex; flex-direction: column; gap: 14px;">
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <h3>Live Multi-Face Camera Monitor</h3>
+                <span class="badge badge-info"><span class="pulse-dot green"></span> Live 30 FPS</span>
+              </div>
+              <div style="width: 100%; height: 260px; background: #000; border-radius: var(--radius-sm); overflow: hidden; position: relative;">
+                <img src="/api/stream/video_feed" alt="Live Camera" style="width: 100%; height: 100%; object-fit: cover;" />
+              </div>
+              <p style="font-size: 0.8rem; color: var(--text-muted);">
+                YuNet Multi-Face Detection + SFace Deep Biometric Embeddings actively running.
+              </p>
+            </div>
+
+            <div class="glass-panel" style="padding: 20px; display: flex; flex-direction: column; gap: 14px;">
+              <h3>Today's Recent Punches</h3>
+              <div class="table-container" style="max-height: 280px; overflow-y: auto;">
+                <table class="custom-table">
+                  <thead>
+                    <tr>
+                      <th>Employee</th>
+                      <th>Dept</th>
+                      <th>Type</th>
+                      <th>Time</th>
+                      <th>Score</th>
+                    </tr>
+                  </thead>
+                  <tbody id="overview-recent-logs">
+                    <tr><td colspan="5" style="text-align: center; color: var(--text-muted); padding: 24px;">Loading logs...</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- TAB 2: EMPLOYEES -->
+        <section id="employees" class="tab-panel">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div>
+              <h2>Employee Directory & Face Biometrics</h2>
+              <p style="font-size: 0.85rem; color: var(--text-muted);">Manage employee profiles, vector embeddings, and enrollment status</p>
+            </div>
+            <button id="btn-open-add-emp" class="btn btn-primary">
+              <svg class="ui-icon ui-icon-xs" viewBox="0 0 24 24">
+                <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+                <circle cx="9" cy="7" r="4"></circle>
+                <line x1="19" y1="8" x2="19" y2="14"></line>
+                <line x1="22" y1="11" x2="16" y2="11"></line>
+              </svg>
+              Add New Employee
+            </button>
+          </div>
+
+          <div class="glass-panel" style="padding: 20px;">
+            <div class="table-container">
+              <table class="custom-table">
+                <thead>
+                  <tr>
+                    <th>Employee Name</th>
+                    <th>Code</th>
+                    <th>Department</th>
+                    <th>Designation</th>
+                    <th>Face Biometric</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="employees-table-body">
+                  <tr><td colspan="6" style="text-align: center; color: var(--text-muted); padding: 30px;">Loading employees...</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- TAB 3: ATTENDANCE RECORDS -->
+        <section id="attendance" class="tab-panel">
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
+            <div>
+              <h2>Attendance Audit Logs</h2>
+              <p style="font-size: 0.85rem; color: var(--text-muted);">Time-stamped biometric records, confidence ratings, and photo evidence</p>
+            </div>
+            <div style="display: flex; gap: 12px; align-items: center;">
+              <input type="date" id="log-filter-date" class="form-control" style="width: 170px;" />
+              <select id="log-filter-type" class="form-control" style="width: 150px;">
+                <option value="">All Punches</option>
+                <option value="CHECK_IN">Check In Only</option>
+                <option value="CHECK_OUT">Check Out Only</option>
+              </select>
+              <button id="btn-export-csv" class="btn btn-secondary">
+                <svg class="ui-icon ui-icon-xs" viewBox="0 0 24 24">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                  <polyline points="7 10 12 15 17 10"></polyline>
+                  <line x1="12" y1="15" x2="12" y2="3"></line>
+                </svg>
+                Export CSV
+              </button>
+            </div>
+          </div>
+
+          <div class="glass-panel" style="padding: 20px;">
+            <div class="table-container">
+              <table class="custom-table">
+                <thead>
+                  <tr>
+                    <th>Employee</th>
+                    <th>Department</th>
+                    <th>Punch Type</th>
+                    <th>Timestamp</th>
+                    <th>Confidence</th>
+                    <th>Snapshot Proof</th>
+                  </tr>
+                </thead>
+                <tbody id="attendance-table-body">
+                  <tr><td colspan="6" style="text-align: center; color: var(--text-muted); padding: 30px;">Loading attendance records...</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- TAB 4: SETTINGS & DATABASE -->
+        <section id="settings" class="tab-panel">
+          <h2>System Architecture & Configuration</h2>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+            <div class="glass-panel" style="padding: 24px; display: flex; flex-direction: column; gap: 16px;">
+              <h3>Database Settings</h3>
+              <p style="font-size: 0.85rem; color: var(--text-muted);">
+                Currently connected to: <strong style="color: #fff;">{{ db_info.type }}</strong>
+              </p>
+              <div style="background: rgba(0,0,0,0.3); padding: 14px; border-radius: var(--radius-sm); font-size: 0.82rem;" class="mono">
+                Connection URL: {{ db_info.url }}
+              </div>
+              <div class="info-callout">
+                <svg class="ui-icon ui-icon-sm callout-icon" viewBox="0 0 24 24">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <line x1="12" y1="16" x2="12" y2="12"></line>
+                  <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                </svg>
+                <div>
+                  <strong>PostgreSQL Configuration:</strong> Ensure PostgreSQL is running locally on port 5432 or configure a cloud connection URI (e.g. Supabase, Neon) in <code>.env</code> under <code>DATABASE_URL</code>, then restart the server.
+                </div>
+              </div>
+            </div>
+
+            <div class="glass-panel" style="padding: 24px; display: flex; flex-direction: column; gap: 16px;">
+              <h3>AI & Camera Parameters</h3>
+              <ul style="list-style: none; display: flex; flex-direction: column; gap: 12px; font-size: 0.85rem;">
+                <li style="display: flex; justify-content: space-between;">
+                  <span style="color: var(--text-muted);">Multi-Face Detector:</span>
+                  <strong>YuNet ONNX (640x480)</strong>
+                </li>
+                <li style="display: flex; justify-content: space-between;">
+                  <span style="color: var(--text-muted);">Face Embedding Extractor:</span>
+                  <strong>SFace MobileFaceNet (128-D)</strong>
+                </li>
+                <li style="display: flex; justify-content: space-between;">
+                  <span style="color: var(--text-muted);">Cosine Match Threshold:</span>
+                  <strong>0.380 (Verified Identity)</strong>
+                </li>
+                <li style="display: flex; justify-content: space-between;">
+                  <span style="color: var(--text-muted);">Debounce Cooldown:</span>
+                  <strong>300 seconds (5 min interval)</strong>
+                </li>
+                <li style="display: flex; justify-content: space-between;">
+                  <span style="color: var(--text-muted);">Anti-Spoofing / Liveness:</span>
+                  <strong>Laplacian & Frequency Spectrum</strong>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <!-- TAB 5: ADMINS & SECURITY -->
+        <section id="security" class="tab-panel">
+          <div>
+            <h2>Admin Security & User Management</h2>
+            <p style="font-size: 0.85rem; color: var(--text-muted);">
+              Manage administrative credentials, change master login, and provision secondary admin accounts
+            </p>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1.3fr; gap: 24px; align-items: start;">
+            <!-- Profile & Password Change Form -->
+            <div class="glass-panel" style="padding: 24px; display: flex; flex-direction: column; gap: 18px;">
+              <div>
+                <h3 style="display: flex; align-items: center; gap: 8px;">
+                  <svg class="ui-icon ui-icon-sm" style="color: var(--primary);" viewBox="0 0 24 24">
+                    <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="12" cy="7" r="4"></circle>
+                  </svg>
+                  My Admin Profile & Password
+                </h3>
+                <p style="font-size: 0.82rem; color: var(--text-muted); margin-top: 4px;">
+                  Update your display name, username, or master access key
+                </p>
+              </div>
+
+              <form id="update-profile-form">
+                <div class="form-group">
+                  <label class="form-label" for="profile-username">Username *</label>
+                  <input type="text" id="profile-username" class="form-control" placeholder="admin" required autocomplete="username" />
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label" for="profile-fullname">Display Name</label>
+                  <input type="text" id="profile-fullname" class="form-control" placeholder="System Administrator" />
+                </div>
+
+                <div style="border-top: 1px solid var(--border-glass); margin: 16px 0 12px; padding-top: 14px;">
+                  <span style="font-size: 0.82rem; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.05em;">
+                    Change Password (Optional)
+                  </span>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label" for="profile-current-pwd">Current Password</label>
+                  <input type="password" id="profile-current-pwd" class="form-control" placeholder="Enter current password to verify" autocomplete="current-password" />
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                  <div class="form-group">
+                    <label class="form-label" for="profile-new-pwd">New Password</label>
+                    <input type="password" id="profile-new-pwd" class="form-control" placeholder="Min. 6 characters" autocomplete="new-password" />
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label" for="profile-confirm-pwd">Confirm New Password</label>
+                    <input type="password" id="profile-confirm-pwd" class="form-control" placeholder="Repeat new password" autocomplete="new-password" />
+                  </div>
+                </div>
+
+                <div id="profile-status-msg" style="display: none; padding: 10px 14px; border-radius: var(--radius-sm); font-size: 0.82rem; margin-top: 8px;"></div>
+
+                <div style="display: flex; justify-content: flex-end; margin-top: 16px;">
+                  <button type="submit" id="btn-save-profile" class="btn btn-primary" style="padding: 10px 20px;">
+                    <svg class="ui-icon ui-icon-xs" viewBox="0 0 24 24">
+                      <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+                      <polyline points="17 21 17 13 7 13 7 21"></polyline>
+                      <polyline points="7 3 7 8 15 8"></polyline>
+                    </svg>
+                    Save Changes
+                  </button>
+                </div>
+              </form>
+            </div>
+
+            <!-- Administrators List Table -->
+            <div class="glass-panel" style="padding: 24px; display: flex; flex-direction: column; gap: 18px;">
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                  <h3 style="display: flex; align-items: center; gap: 8px;">
+                    <svg class="ui-icon ui-icon-sm" style="color: var(--accent-cyan);" viewBox="0 0 24 24">
+                      <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+                      <circle cx="9" cy="7" r="4"></circle>
+                      <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
+                      <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                    </svg>
+                    System Administrators
+                  </h3>
+                  <p style="font-size: 0.82rem; color: var(--text-muted); margin-top: 4px;">
+                    Active accounts with portal access credentials
+                  </p>
+                </div>
+                <button id="btn-open-add-admin" class="btn btn-primary btn-sm">
+                  <svg class="ui-icon ui-icon-xs" viewBox="0 0 24 24">
+                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                  </svg>
+                  Add Admin
+                </button>
+              </div>
+
+              <div class="table-container">
+                <table class="custom-table">
+                  <thead>
+                    <tr>
+                      <th>Administrator</th>
+                      <th>Role</th>
+                      <th>Created</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody id="admins-table-body">
+                    <tr><td colspan="4" style="text-align: center; color: var(--text-muted); padding: 24px;">Loading administrators...</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </main>
+  </div>
+
+  <!-- MODAL: ADD EMPLOYEE -->
+  <div id="add-employee-modal" class="modal-backdrop">
+    <div class="modal-dialog glass-panel">
+      <div class="modal-header">
+        <h3>Add New Employee</h3>
+        <button id="btn-close-add-emp" class="modal-close">&times;</button>
+      </div>
+      <form id="add-employee-form">
+        <div class="form-group">
+          <label class="form-label" for="emp-code">Employee ID / Code *</label>
+          <input type="text" id="emp-code" class="form-control" placeholder="EMP101" required />
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+          <div class="form-group">
+            <label class="form-label" for="emp-first-name">First Name *</label>
+            <input type="text" id="emp-first-name" class="form-control" placeholder="Alex" required />
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="emp-last-name">Last Name</label>
+            <input type="text" id="emp-last-name" class="form-control" placeholder="Carter" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="emp-email">Email Address</label>
+          <input type="email" id="emp-email" class="form-control" placeholder="alex@company.com" />
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+          <div class="form-group">
+            <label class="form-label" for="emp-dept">Department</label>
+            <input type="text" id="emp-dept" class="form-control" placeholder="Engineering" value="Engineering" />
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="emp-desig">Designation</label>
+            <input type="text" id="emp-desig" class="form-control" placeholder="AI Engineer" value="Specialist" />
+          </div>
+        </div>
+        <div style="display: flex; justify-content: flex-end; gap: 12px; margin-top: 20px;">
+          <button type="submit" class="btn btn-primary">Save & Proceed to Face Enroll</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: ENROLL FACE BIOMETRIC -->
+  <div id="enroll-face-modal" class="modal-backdrop">
+    <div class="modal-dialog glass-panel" style="max-width: 580px;">
+      <div class="modal-header">
+        <h3 id="enroll-modal-title">Enroll Face Biometric</h3>
+        <button id="btn-close-enroll" class="modal-close">&times;</button>
+      </div>
+      <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 16px;">
+        Align face within the viewfinder or upload a high-resolution portrait photograph.
+      </p>
+
+      <div class="camera-enroll-preview">
+        <img id="enroll-camera-feed" src="" alt="Live Capture Preview" />
+        <div class="camera-enroll-reticle"></div>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 18px;">
+        <button id="btn-capture-camera" class="btn btn-primary" style="width: 100%; padding: 12px;">
+          <svg class="ui-icon ui-icon-sm" viewBox="0 0 24 24">
+            <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+            <circle cx="12" cy="13" r="4"></circle>
+          </svg>
+          Snap Face from Live Camera (1-Click)
+        </button>
+
+        <div style="text-align: center; color: var(--text-muted); font-size: 0.8rem; margin: 4px 0;">OR</div>
+
+        <label class="btn btn-secondary" style="width: 100%; cursor: pointer;">
+          <svg class="ui-icon ui-icon-sm" viewBox="0 0 24 24">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+            <polyline points="17 8 12 3 7 8"></polyline>
+            <line x1="12" y1="3" x2="12" y2="15"></line>
+          </svg>
+          Upload Photo File (JPG / PNG)
+          <input type="file" id="enroll-file-input" accept="image/*" style="display: none;" />
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: ADD ADMINISTRATOR -->
+  <div id="add-admin-modal" class="modal-backdrop">
+    <div class="modal-dialog glass-panel" style="max-width: 480px;">
+      <div class="modal-header">
+        <h3>Add New Administrator</h3>
+        <button id="btn-close-add-admin" class="modal-close">&times;</button>
+      </div>
+      <form id="add-admin-form">
+        <div class="form-group">
+          <label class="form-label" for="new-admin-username">Username *</label>
+          <input type="text" id="new-admin-username" class="form-control" placeholder="security_officer" required autocomplete="username" />
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="new-admin-fullname">Display Name</label>
+          <input type="text" id="new-admin-fullname" class="form-control" placeholder="Security Officer" />
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="new-admin-password">Initial Password *</label>
+          <input type="password" id="new-admin-password" class="form-control" placeholder="Min. 6 characters" required autocomplete="new-password" />
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="new-admin-role">Account Privilege</label>
+          <select id="new-admin-role" class="form-control">
+            <option value="ADMIN">ADMIN (Operator Privileges)</option>
+            <option value="SUPER_ADMIN">SUPER_ADMIN (Full Administrative Control)</option>
+          </select>
+        </div>
+
+        <div id="new-admin-error" style="display: none; color: var(--accent-rose); font-size: 0.82rem; margin-top: 8px;"></div>
+
+        <div style="display: flex; justify-content: flex-end; gap: 12px; margin-top: 20px;">
+          <button type="submit" id="btn-submit-new-admin" class="btn btn-primary">Create Administrator</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="/static/js/api.js"></script>
+  <script src="/static/js/dashboard.js"></script>
+</body>
+</html>
