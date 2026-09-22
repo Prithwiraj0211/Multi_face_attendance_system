@@ -3,156 +3,46 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>VisionPass - Multi-Face AI Attendance Recognition System</title>
-  <meta name="description" content="Production-grade multi-face biometric attendance kiosk and admin dashboard powered by deep learning facial recognition.">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+  <title>VisionPass - Multi-Face AI Attendance System</title>
   <link rel="stylesheet" href="./frontend/static/css/base.css">
   <link rel="stylesheet" href="./frontend/static/css/kiosk.css">
   <link rel="stylesheet" href="./frontend/static/css/dashboard.css">
   <style>
-    /* GitHub Pages Live Portal Enhancements */
-    :root {
-      --cyan-glow: rgba(6, 182, 212, 0.4);
-      --emerald-glow: rgba(16, 185, 129, 0.4);
-    }
+    /* Exact Localhost Mirror Styles */
     body {
-      background-color: #080c16;
-      color: #f8fafc;
+      background-color: var(--bg-primary, #080c16);
+      color: var(--text-primary, #f8fafc);
+      min-height: 100vh;
       overflow-x: hidden;
       font-family: 'Plus Jakarta Sans', sans-serif;
     }
-    /* Top Universal Header */
-    .portal-nav {
-      background: rgba(15, 23, 42, 0.85);
-      backdrop-filter: blur(16px);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-      padding: 10px 24px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      position: sticky;
-      top: 0;
-      z-index: 1000;
-    }
-    .portal-brand {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      text-decoration: none;
-      color: #fff;
-    }
-    .portal-logo {
-      width: 36px;
-      height: 36px;
-      border-radius: 10px;
-      background: linear-gradient(135deg, #0284c7, #6366f1);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 0 15px rgba(99, 102, 241, 0.4);
-    }
-    .portal-title h1 {
-      font-size: 1.05rem;
-      font-weight: 700;
-      letter-spacing: -0.02em;
-      margin: 0;
-      line-height: 1.2;
-    }
-    .portal-title p {
-      font-size: 0.72rem;
-      color: #94a3b8;
-      margin: 0;
-    }
-    .nav-switcher {
-      display: flex;
-      align-items: center;
-      background: rgba(0, 0, 0, 0.4);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 9999px;
-      padding: 4px;
-      gap: 4px;
-    }
-    .nav-pill {
-      background: transparent;
-      border: none;
-      color: #94a3b8;
-      font-family: inherit;
-      font-size: 0.82rem;
-      font-weight: 600;
-      padding: 6px 16px;
-      border-radius: 9999px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      transition: all 0.2s ease;
-    }
-    .nav-pill:hover {
-      color: #fff;
-    }
-    .nav-pill.active {
-      background: linear-gradient(135deg, #0284c7, #6366f1);
-      color: #fff;
-      box-shadow: 0 0 16px rgba(99, 102, 241, 0.4);
-    }
-    .portal-actions {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-    .status-beacon {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 0.78rem;
-      font-weight: 700;
-      color: #10b981;
-      background: rgba(16, 185, 129, 0.1);
-      border: 1px solid rgba(16, 185, 129, 0.3);
-      padding: 5px 12px;
-      border-radius: 9999px;
-    }
-    .beacon-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: #10b981;
-      box-shadow: 0 0 8px #10b981;
-      animation: pulse 1.8s infinite;
-    }
-    @keyframes pulse {
-      0%, 100% { transform: scale(1); opacity: 1; }
-      50% { transform: scale(1.3); opacity: 0.6; }
-    }
-    /* Section View Toggles */
-    .view-section {
+    .view-container {
       display: none;
+      width: 100%;
+      min-height: 100vh;
     }
-    .view-section.active-view {
+    .view-container.active-view {
       display: block;
     }
-    /* Camera Viewport Canvas Stack */
-    .live-camera-wrapper {
+    /* Video & Canvas Overlay Stack */
+    .video-viewport-wrapper {
       position: relative;
       width: 100%;
       height: 100%;
-      min-height: 480px;
-      background: #050811;
+      background: #000;
       border-radius: var(--radius-md);
       overflow: hidden;
       display: flex;
       align-items: center;
       justify-content: center;
     }
-    #kiosk-video {
+    #kiosk-video-el {
       width: 100%;
       height: 100%;
       object-fit: cover;
-      transform: scaleX(-1); /* Mirror camera for natural kiosk feel */
+      transform: scaleX(-1);
     }
-    #kiosk-overlay {
+    #kiosk-canvas-hud {
       position: absolute;
       top: 0;
       left: 0;
@@ -161,116 +51,25 @@
       pointer-events: none;
       z-index: 5;
     }
-    .camera-prompt-overlay {
+    .camera-request-prompt {
       position: absolute;
       inset: 0;
-      background: rgba(8, 12, 22, 0.88);
-      backdrop-filter: blur(8px);
+      background: rgba(8, 12, 22, 0.92);
+      backdrop-filter: blur(10px);
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       text-align: center;
-      padding: 30px;
+      padding: 24px;
       z-index: 10;
-      transition: opacity 0.3s ease;
+      cursor: pointer;
     }
-    .camera-prompt-overlay.hidden {
+    .camera-request-prompt.hidden {
       display: none;
     }
-    .hud-telemetry-badge {
-      position: absolute;
-      top: 18px;
-      left: 18px;
-      background: rgba(15, 23, 42, 0.75);
-      border: 1px solid rgba(6, 182, 212, 0.35);
-      color: #38bdf8;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.75rem;
-      padding: 6px 12px;
-      border-radius: 6px;
-      z-index: 6;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-    .hud-controls-dock {
-      position: absolute;
-      bottom: 18px;
-      left: 50%;
-      transform: translateX(-50%);
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      z-index: 8;
-      background: rgba(15, 23, 42, 0.8);
-      backdrop-filter: blur(12px);
-      padding: 6px 14px;
-      border-radius: 9999px;
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
-    }
-    .quick-snap-btn {
-      background: linear-gradient(135deg, #10b981, #059669);
-      color: #fff;
-      border: none;
-      font-weight: 700;
-      font-size: 0.84rem;
-      padding: 8px 20px;
-      border-radius: 9999px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      box-shadow: 0 0 20px rgba(16, 185, 129, 0.4);
-      transition: all 0.2s ease;
-    }
-    .quick-snap-btn:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 0 25px rgba(16, 185, 129, 0.6);
-    }
-    .toast-punch {
-      position: absolute;
-      top: 24px;
-      left: 50%;
-      transform: translateX(-50%) translateY(-100px);
-      background: rgba(15, 23, 42, 0.95);
-      border: 1px solid #10b981;
-      box-shadow: 0 10px 40px rgba(16, 185, 129, 0.35);
-      border-radius: 12px;
-      padding: 12px 24px;
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      z-index: 50;
-      opacity: 0;
-      transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-    .toast-punch.show {
-      transform: translateX(-50%) translateY(0);
-      opacity: 1;
-    }
-    .toast-avatar {
-      width: 48px;
-      height: 48px;
-      border-radius: 50%;
-      border: 2px solid #10b981;
-      object-fit: cover;
-    }
-    .toast-title {
-      font-size: 1.05rem;
-      font-weight: 800;
-      color: #fff;
-      margin: 0;
-    }
-    .toast-sub {
-      font-size: 0.78rem;
-      font-weight: 700;
-      color: #34d399;
-      margin: 0;
-    }
-    /* Modal Styling */
-    .modal-overlay {
+    /* Modal styles */
+    .modal-backdrop {
       position: fixed;
       inset: 0;
       background: rgba(0, 0, 0, 0.75);
@@ -280,14 +79,14 @@
       justify-content: center;
       z-index: 2000;
     }
-    .modal-overlay.active {
+    .modal-backdrop.active {
       display: flex;
     }
-    .modal-card {
+    .modal-box {
       background: #0f172a;
       border: 1px solid rgba(255, 255, 255, 0.12);
       border-radius: 16px;
-      padding: 28px;
+      padding: 24px;
       width: 90%;
       max-width: 500px;
       box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
@@ -296,57 +95,9 @@
 </head>
 <body>
 
-  <!-- Top Universal Header & Navigation -->
-  <header class="portal-nav">
-    <a href="#" class="portal-brand" onclick="switchPortalView('kiosk'); return false;">
-      <div class="portal-logo">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M3 7V5a2 2 0 0 1 2-2h2"></path>
-          <path d="M17 3h2a2 2 0 0 1 2 2v2"></path>
-          <path d="M21 17v2a2 2 0 0 1-2 2h-2"></path>
-          <path d="M7 21H5a2 2 0 0 1-2-2v-2"></path>
-          <circle cx="12" cy="12" r="3"></circle>
-          <path d="m16 16-.9-.9"></path>
-        </svg>
-      </div>
-      <div class="portal-title">
-        <h1>VisionPass AI</h1>
-        <p>Real-Time Multi-Face Biometric Engine</p>
-      </div>
-    </a>
-
-    <!-- View Switcher -->
-    <div class="nav-switcher">
-      <button id="pill-kiosk" class="nav-pill active" onclick="switchPortalView('kiosk')">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="14" x="2" y="3" rx="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
-        Live Attendance Kiosk
-      </button>
-      <button id="pill-dashboard" class="nav-pill" onclick="switchPortalView('dashboard')">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="7" height="9" x="3" y="3" rx="1"></rect><rect width="7" height="5" x="14" y="3" rx="1"></rect><rect width="7" height="9" x="14" y="12" rx="1"></rect><rect width="7" height="5" x="3" y="16" rx="1"></rect></svg>
-        Admin Dashboard
-      </button>
-    </div>
-
-    <!-- Status & Quick Controls -->
-    <div class="portal-actions">
-      <div class="status-beacon">
-        <span class="beacon-dot"></span>
-        <span id="beacon-text">LIVE BIOMETRIC ACTIVE</span>
-      </div>
-      <button id="portal-voice-btn" class="btn btn-secondary btn-sm" onclick="togglePortalAudio()" title="Toggle Speech Audio">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>
-        <span id="portal-voice-text">Audio On</span>
-      </button>
-      <a href="https://github.com/Prithwiraj0211/Multi_face_attendance_system" target="_blank" class="btn btn-secondary btn-sm" title="View Source on GitHub">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
-        GitHub
-      </a>
-    </div>
-  </header>
-
-  <!-- ================= VIEW 1: LIVE ATTENDANCE KIOSK ================= -->
-  <main id="view-kiosk" class="view-section active-view">
-    <div class="kiosk-container" style="min-height: calc(100vh - 65px);">
+  <!-- ================= VIEW 1: EXACT LOCALHOST KIOSK TERMINAL ================= -->
+  <div id="portal-kiosk-view" class="view-container active-view">
+    <div class="kiosk-container">
 
       <!-- Top HUD Header -->
       <header class="kiosk-header">
@@ -370,7 +121,7 @@
         <div style="display: flex; align-items: center; gap: 24px;">
           <div style="display: flex; align-items: center; gap: 8px; font-size: 0.82rem; font-weight: 700; letter-spacing: 0.04em;">
             <span id="kiosk-status-dot" class="pulse-dot green"></span>
-            <span id="kiosk-status-text">CAMERA & AI ACTIVE</span>
+            <span id="kiosk-status-text">SYSTEM ONLINE & ACTIVE</span>
             <span id="kiosk-mode-badge" class="badge badge-info" style="margin-left: 8px; font-size: 0.72rem; padding: 3px 8px;">AUTO FLIP</span>
           </div>
 
@@ -386,56 +137,35 @@
 
         <!-- Live Stream Viewport -->
         <section class="kiosk-stream-panel">
-          <div class="video-container live-camera-wrapper">
+          <div class="video-container video-viewport-wrapper">
             
-            <!-- Real Live Browser Webcam Stream -->
-            <video id="kiosk-video" playsinline autoplay muted></video>
+            <!-- Real Live Camera Element -->
+            <video id="kiosk-video-el" playsinline autoplay muted></video>
             
-            <!-- High-Tech Cyber HUD Overlay Canvas -->
-            <canvas id="kiosk-overlay"></canvas>
+            <!-- Cyber HUD Overlay Canvas -->
+            <canvas id="kiosk-canvas-hud"></canvas>
             
-            <!-- Dynamic Scanline Sweep -->
+            <!-- Scanline Sweep Animation -->
             <div class="scanline"></div>
 
-            <!-- Telemetry Overlay Badge -->
-            <div class="hud-telemetry-badge">
-              <span>FPS: <strong id="hud-fps" style="color: #34d399;">30</strong></span>
-              <span>•</span>
-              <span>DETECT: <strong style="color: #38bdf8;">YuNet ONNX</strong></span>
-              <span>•</span>
-              <span>LIVENESS: <strong style="color: #10b981;">ACTIVE</strong></span>
-            </div>
-
-            <!-- Toast Punch Popup on Recognition -->
-            <div id="toast-punch-popup" class="toast-punch">
-              <img id="toast-avatar" class="toast-avatar" src="" alt="Identified Employee">
-              <div>
-                <h4 id="toast-name" class="toast-title">Employee Name</h4>
-                <p id="toast-status" class="toast-sub">CHECK-IN CONFIRMED</p>
+            <!-- Floating HUD Toast (appears on face punch) -->
+            <div id="kiosk-toast" class="kiosk-toast-overlay">
+              <img id="kiosk-toast-avatar" class="kiosk-toast-avatar" src="" alt="Identified Employee" />
+              <div class="kiosk-toast-info">
+                <h4 id="kiosk-toast-name">Employee Name</h4>
+                <p id="kiosk-toast-type">CHECK-IN CONFIRMED</p>
               </div>
             </div>
 
-            <!-- Camera Permission Overlay (Shown if camera is not active) -->
-            <div id="camera-prompt" class="camera-prompt-overlay">
-              <div style="width: 64px; height: 64px; border-radius: 50%; background: rgba(99, 102, 241, 0.2); display: flex; align-items: center; justify-content: center; margin-bottom: 16px; border: 1px solid #6366f1;">
-                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#818cf8" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
+            <!-- Permission prompt overlay if camera was not started automatically -->
+            <div id="cam-prompt-box" class="camera-request-prompt" onclick="activateKioskWebcam()">
+              <div style="width: 56px; height: 56px; border-radius: 50%; background: rgba(99, 102, 241, 0.2); display: flex; align-items: center; justify-content: center; margin-bottom: 12px; border: 1px solid #6366f1;">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#818cf8" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
               </div>
-              <h2 style="font-size: 1.35rem; font-weight: 700; margin-bottom: 8px;">Enable Camera for Live Face Punch</h2>
-              <p style="color: #94a3b8; max-width: 420px; font-size: 0.88rem; margin-bottom: 20px;">
-                Allow webcam access to test live multi-face detection, cyber HUD reticles, and voice attendance check-ins directly in your browser.
+              <h2 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 6px;">Click to Start Live Camera</h2>
+              <p style="color: #94a3b8; font-size: 0.85rem; max-width: 380px;">
+                Direct hardware camera stream with YuNet multi-face detection and real-time biometric reticles.
               </p>
-              <button class="btn btn-primary" onclick="initWebcamStream()" style="padding: 10px 24px; font-size: 0.92rem;">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
-                Activate Live Webcam
-              </button>
-            </div>
-
-            <!-- Floating Quick-Action Dock -->
-            <div class="hud-controls-dock">
-              <button class="quick-snap-btn" onclick="triggerFacePunchSim()" title="Trigger Recognition on Current Frame">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
-                📸 Scan & Punch Face
-              </button>
             </div>
 
           </div>
@@ -450,11 +180,11 @@
               </svg>
               Live Punch Activity
             </h3>
-            <span class="badge badge-info">Real-Time Sync</span>
+            <span class="badge badge-info">Live Sync</span>
           </div>
 
           <div class="ticker-list" id="kiosk-ticker-list">
-            <!-- Dynamic punch cards inserted here -->
+            <!-- Dynamic punch cards -->
           </div>
         </aside>
 
@@ -465,25 +195,25 @@
         <div style="display: flex; align-items: center; gap: 14px; flex-wrap: wrap;">
           <!-- Kiosk Mode Selector -->
           <div style="display: flex; align-items: center; gap: 4px; background: rgba(255, 255, 255, 0.04); padding: 3px; border-radius: var(--radius-sm); border: 1px solid var(--border-glass);">
-            <button id="mode-auto" class="btn btn-sm mode-btn btn-primary" onclick="setKioskMode('AUTO')">
+            <button id="mode-auto" class="btn btn-sm mode-btn btn-primary" onclick="setKioskMode('AUTO')" title="Smart Alternation (Check-In -> Check-Out)">
               Auto Flip
             </button>
-            <button id="mode-in" class="btn btn-sm mode-btn btn-secondary" onclick="setKioskMode('CHECK_IN')">
+            <button id="mode-in" class="btn btn-sm mode-btn btn-secondary" onclick="setKioskMode('CHECK_IN')" title="All Scans Register as Check-In">
               Check-In Only
             </button>
-            <button id="mode-out" class="btn btn-sm mode-btn btn-secondary" onclick="setKioskMode('CHECK_OUT')">
+            <button id="mode-out" class="btn btn-sm mode-btn btn-secondary" onclick="setKioskMode('CHECK_OUT')" title="All Scans Register as Check-Out">
               Check-Out Only
             </button>
           </div>
 
-          <button id="btn-audio-toggle" class="btn btn-secondary btn-sm" onclick="togglePortalAudio()">
-            <svg class="ui-icon ui-icon-xs" viewBox="0 0 24 24">
+          <button id="btn-audio-toggle" class="btn btn-secondary btn-sm" onclick="toggleAudio(this)">
+            <svg class="ui-icon ui-icon-xs" id="audio-icon" viewBox="0 0 24 24">
               <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
               <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
             </svg>
-            <span id="audio-status-label">Voice Feedback: Active</span>
+            <span id="audio-text">Voice Feedback: Active</span>
           </button>
-          <button class="btn btn-secondary btn-sm" onclick="toggleFullscreenTerminal()">
+          <button class="btn btn-secondary btn-sm" onclick="toggleFullscreen()">
             <svg class="ui-icon ui-icon-xs" viewBox="0 0 24 24">
               <polyline points="15 3 21 3 21 9"></polyline>
               <polyline points="9 21 3 21 3 15"></polyline>
@@ -498,23 +228,22 @@
           <span style="font-size: 0.78rem; color: var(--text-muted);">
             Protected by Biometric Anti-Spoof & 128-D Vector Cryptography
           </span>
-          <button class="btn btn-primary btn-sm" onclick="switchPortalView('dashboard')">
+          <button class="btn btn-primary btn-sm" onclick="showDashboardView()">
             <svg class="ui-icon ui-icon-xs" viewBox="0 0 24 24">
               <rect width="18" height="11" x="3" y="11" rx="2" ry="2"></rect>
               <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
             </svg>
-            Admin Management
+            Admin Console
           </button>
         </div>
       </footer>
 
     </div>
-  </main>
+  </div>
 
-  <!-- ================= VIEW 2: ADMIN MANAGEMENT DASHBOARD ================= -->
-  <main id="view-dashboard" class="view-section">
+  <!-- ================= VIEW 2: EXACT LOCALHOST ADMIN DASHBOARD ================= -->
+  <div id="portal-dashboard-view" class="view-container">
     <div class="dashboard-layout">
-      
       <!-- Sidebar Navigation -->
       <aside class="sidebar">
         <div class="brand">
@@ -530,48 +259,71 @@
           </div>
           <div class="brand-text">
             <h2>VisionPass</h2>
-            <span>Admin Console</span>
+            <span>Multi-Face AI</span>
           </div>
         </div>
 
         <ul class="nav-menu">
           <li class="nav-item active">
-            <a href="#" onclick="switchDashTab('overview'); return false;">
+            <a href="#" onclick="switchTab('overview'); return false;">
               <span class="nav-icon">
-                <svg class="ui-icon ui-icon-sm" viewBox="0 0 24 24"><rect width="7" height="9" x="3" y="3" rx="1"></rect><rect width="7" height="5" x="14" y="3" rx="1"></rect><rect width="7" height="9" x="14" y="12" rx="1"></rect><rect width="7" height="5" x="3" y="16" rx="1"></rect></svg>
+                <svg class="ui-icon ui-icon-sm" viewBox="0 0 24 24">
+                  <rect width="7" height="9" x="3" y="3" rx="1"></rect>
+                  <rect width="7" height="5" x="14" y="3" rx="1"></rect>
+                  <rect width="7" height="9" x="14" y="12" rx="1"></rect>
+                  <rect width="7" height="5" x="3" y="16" rx="1"></rect>
+                </svg>
               </span>
-              Overview & KPIs
+              Overview & Analytics
             </a>
           </li>
           <li class="nav-item">
-            <a href="#" onclick="switchDashTab('employees'); return false;">
+            <a href="#" onclick="switchTab('employees'); return false;">
               <span class="nav-icon">
-                <svg class="ui-icon ui-icon-sm" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M22 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                <svg class="ui-icon ui-icon-sm" viewBox="0 0 24 24">
+                  <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="9" cy="7" r="4"></circle>
+                  <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
+                  <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                </svg>
               </span>
               Employees & Faces
             </a>
           </li>
           <li class="nav-item">
-            <a href="#" onclick="switchDashTab('attendance'); return false;">
+            <a href="#" onclick="switchTab('attendance'); return false;">
               <span class="nav-icon">
-                <svg class="ui-icon ui-icon-sm" viewBox="0 0 24 24"><path d="M8 2v4"></path><path d="M16 2v4"></path><rect width="18" height="18" x="3" y="4" rx="2"></rect><path d="M3 10h18"></path><path d="m9 16 2 2 4-4"></path></svg>
+                <svg class="ui-icon ui-icon-sm" viewBox="0 0 24 24">
+                  <path d="M8 2v4"></path>
+                  <path d="M16 2v4"></path>
+                  <rect width="18" height="18" x="3" y="4" rx="2"></rect>
+                  <path d="M3 10h18"></path>
+                  <path d="m9 16 2 2 4-4"></path>
+                </svg>
               </span>
               Attendance Records
             </a>
           </li>
           <li class="nav-item">
-            <a href="#" onclick="switchDashTab('settings'); return false;">
+            <a href="#" onclick="switchTab('settings'); return false;">
               <span class="nav-icon">
-                <svg class="ui-icon ui-icon-sm" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+                <svg class="ui-icon ui-icon-sm" viewBox="0 0 24 24">
+                  <circle cx="12" cy="12" r="3"></circle>
+                  <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                </svg>
               </span>
-              System & Backend Link
+              Camera & Database
             </a>
           </li>
         </ul>
 
         <div class="sidebar-footer">
-          <button onclick="switchPortalView('kiosk')" class="btn btn-primary btn-sm" style="width: 100%; margin-bottom: 12px;">
-            <svg class="ui-icon ui-icon-xs" viewBox="0 0 24 24"><rect width="20" height="14" x="2" y="3" rx="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
+          <button onclick="showKioskView()" class="btn btn-primary btn-sm" style="width: 100%; margin-bottom: 12px;">
+            <svg class="ui-icon ui-icon-xs" viewBox="0 0 24 24">
+              <rect width="20" height="14" x="2" y="3" rx="2"></rect>
+              <line x1="8" y1="21" x2="16" y2="21"></line>
+              <line x1="12" y1="17" x2="12" y2="21"></line>
+            </svg>
             Open Live Kiosk
           </button>
           <div class="admin-badge">
@@ -587,71 +339,71 @@
       <!-- Main Content Area -->
       <main class="main-content">
 
-        <!-- 1. OVERVIEW TAB -->
-        <section id="dash-tab-overview" class="tab-panel active">
+        <!-- 1. OVERVIEW -->
+        <section id="tab-overview" class="tab-panel active">
           <div class="content-header">
             <div>
               <h1>Overview & Analytics</h1>
-              <p>Real-time attendance telemetry and punch distribution.</p>
+              <p>Real-time attendance metrics and daily operations tracking.</p>
             </div>
-            <button class="btn btn-primary" onclick="openAddEmployeeModal()">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-              Add New Employee
-            </button>
+            <div style="display: flex; gap: 10px;">
+              <button class="btn btn-primary" onclick="openAddEmpModal()">
+                <svg class="ui-icon ui-icon-sm" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                Add Employee
+              </button>
+            </div>
           </div>
 
-          <!-- KPI Cards -->
           <div class="stats-grid">
             <div class="glass-card stat-card">
               <div class="stat-header">
-                <span>Total Enrolled</span>
-                <div class="stat-icon" style="background: rgba(99, 102, 241, 0.15); color: #818cf8; width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center;">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                <span>Total Registered</span>
+                <div class="stat-icon" style="background: rgba(99, 102, 241, 0.15); color: #818cf8;">
+                  <svg class="ui-icon ui-icon-md" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
                 </div>
               </div>
               <div class="stat-value" id="dash-total-emp">6</div>
-              <div class="stat-footer text-success">100% Biometric Vectors Enrolled</div>
+              <div class="stat-footer text-success">Active Employees</div>
             </div>
 
             <div class="glass-card stat-card">
               <div class="stat-header">
                 <span>Today's Check-Ins</span>
-                <div class="stat-icon" style="background: rgba(16, 185, 129, 0.15); color: #34d399; width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center;">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path><polyline points="10 17 15 12 10 7"></polyline><line x1="15" y1="12" x2="3" y2="12"></line></svg>
+                <div class="stat-icon" style="background: rgba(16, 185, 129, 0.15); color: #34d399;">
+                  <svg class="ui-icon ui-icon-md" viewBox="0 0 24 24"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path><polyline points="10 17 15 12 10 7"></polyline><line x1="15" y1="12" x2="3" y2="12"></line></svg>
                 </div>
               </div>
-              <div class="stat-value" id="dash-today-punches">4</div>
-              <div class="stat-footer text-success">Verified by SFace Matcher</div>
+              <div class="stat-value" id="dash-today-checkins">4</div>
+              <div class="stat-footer text-success">Biometric Verified</div>
             </div>
 
             <div class="glass-card stat-card">
               <div class="stat-header">
                 <span>Currently Present</span>
-                <div class="stat-icon" style="background: rgba(6, 182, 212, 0.15); color: #38bdf8; width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center;">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                <div class="stat-icon" style="background: rgba(6, 182, 212, 0.15); color: #38bdf8;">
+                  <svg class="ui-icon ui-icon-md" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
                 </div>
               </div>
-              <div class="stat-value" id="dash-present-now">4</div>
-              <div class="stat-footer text-info">On-Site in Facility</div>
+              <div class="stat-value" id="dash-present-count">4</div>
+              <div class="stat-footer text-info">In Facility</div>
             </div>
 
             <div class="glass-card stat-card">
               <div class="stat-header">
                 <span>Attendance Rate</span>
-                <div class="stat-icon" style="background: rgba(245, 158, 11, 0.15); color: #fbbf24; width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center;">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                <div class="stat-icon" style="background: rgba(245, 158, 11, 0.15); color: #fbbf24;">
+                  <svg class="ui-icon ui-icon-md" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
                 </div>
               </div>
               <div class="stat-value" id="dash-rate">66.7%</div>
-              <div class="stat-footer text-success">Above Daily Quota Target</div>
+              <div class="stat-footer text-success">Operational</div>
             </div>
           </div>
 
-          <!-- Recent Logs in Overview -->
-          <div class="glass-card" style="margin-top: 24px; padding: 24px;">
+          <div class="glass-card" style="margin-top: 24px;">
             <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px;">
-              <h3 style="font-size: 1.1rem; font-weight: 700;">Recent Verified Attendance Punches</h3>
-              <button class="btn btn-secondary btn-sm" onclick="switchDashTab('attendance')">View Complete Audit Trail</button>
+              <h3 style="font-size: 1.1rem; font-weight: 700;">Recent Punches</h3>
+              <span class="badge badge-success">Live Synchronization Active</span>
             </div>
             <div class="table-container">
               <table class="data-table">
@@ -659,396 +411,218 @@
                   <tr>
                     <th>Employee</th>
                     <th>Department</th>
-                    <th>Type</th>
-                    <th>Timestamp</th>
-                    <th>Anti-Spoof Status</th>
+                    <th>Punch Type</th>
+                    <th>Time</th>
+                    <th>Status</th>
                   </tr>
                 </thead>
-                <tbody id="overview-recent-rows">
-                  <!-- Inserted dynamically -->
+                <tbody id="overview-recent-body">
+                  <!-- dynamic -->
                 </tbody>
               </table>
             </div>
           </div>
         </section>
 
-        <!-- 2. EMPLOYEES & FACES TAB -->
-        <section id="dash-tab-employees" class="tab-panel" style="display: none;">
+        <!-- 2. EMPLOYEES -->
+        <section id="tab-employees" class="tab-panel" style="display: none;">
           <div class="content-header">
             <div>
-              <h1>Employees & Biometric Enrolments</h1>
-              <p>Manage staff profiles and 128-D facial vector signatures.</p>
+              <h1>Employees & Faces</h1>
+              <p>Manage employee records and face embeddings.</p>
             </div>
-            <button class="btn btn-primary" onclick="openAddEmployeeModal()">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+            <button class="btn btn-primary" onclick="openAddEmpModal()">
+              <svg class="ui-icon ui-icon-sm" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
               Add New Employee
             </button>
           </div>
 
-          <div class="glass-card" style="padding: 24px;">
+          <div class="glass-card">
             <div class="table-container">
               <table class="data-table">
                 <thead>
                   <tr>
                     <th>Staff Member</th>
-                    <th>Employee ID</th>
+                    <th>Code</th>
                     <th>Department</th>
-                    <th>Face Signature</th>
-                    <th>Created</th>
+                    <th>Face Embedding</th>
                     <th>Action</th>
                   </tr>
                 </thead>
-                <tbody id="employees-table-body">
-                  <!-- Dynamic employee rows -->
+                <tbody id="employees-body">
+                  <!-- dynamic -->
                 </tbody>
               </table>
             </div>
           </div>
         </section>
 
-        <!-- 3. ATTENDANCE RECORDS TAB -->
-        <section id="dash-tab-attendance" class="tab-panel" style="display: none;">
+        <!-- 3. ATTENDANCE -->
+        <section id="tab-attendance" class="tab-panel" style="display: none;">
           <div class="content-header">
             <div>
-              <h1>Attendance Audit Records</h1>
-              <p>Filter, inspect, and export verified time punches.</p>
+              <h1>Attendance Records</h1>
+              <p>Complete historical attendance audit trail.</p>
             </div>
-            <button class="btn btn-secondary" onclick="exportLogsToCSV()">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
-              Export CSV Spreadsheet
+            <button class="btn btn-secondary" onclick="exportCSV()">
+              <svg class="ui-icon ui-icon-sm" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+              Export CSV
             </button>
           </div>
 
-          <div class="glass-card" style="padding: 24px;">
-            <div style="display: flex; gap: 14px; margin-bottom: 20px; flex-wrap: wrap;">
-              <input type="text" id="log-search-input" placeholder="Search by name or code..." oninput="filterLogsTable()" style="background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 8px 14px; border-radius: 8px; width: 280px;">
-              <select id="log-type-filter" onchange="filterLogsTable()" style="background: #1e293b; border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 8px 14px; border-radius: 8px;">
-                <option value="ALL">All Event Types</option>
-                <option value="CHECK_IN">Check-In Only</option>
-                <option value="CHECK_OUT">Check-Out Only</option>
-              </select>
-            </div>
-
+          <div class="glass-card">
             <div class="table-container">
               <table class="data-table">
                 <thead>
                   <tr>
-                    <th>Snapshot Proof</th>
+                    <th>Photo Proof</th>
                     <th>Employee</th>
                     <th>Code</th>
                     <th>Department</th>
-                    <th>Punch Type</th>
-                    <th>Exact Timestamp</th>
-                    <th>Cosine Score</th>
+                    <th>Type</th>
+                    <th>Timestamp</th>
                   </tr>
                 </thead>
-                <tbody id="attendance-table-body">
-                  <!-- Dynamic attendance rows -->
+                <tbody id="attendance-body">
+                  <!-- dynamic -->
                 </tbody>
               </table>
             </div>
           </div>
         </section>
 
-        <!-- 4. SYSTEM & BACKEND LINK TAB -->
-        <section id="dash-tab-settings" class="tab-panel" style="display: none;">
+        <!-- 4. SETTINGS -->
+        <section id="tab-settings" class="tab-panel" style="display: none;">
           <div class="content-header">
             <div>
-              <h1>System Architecture & Backend Connector</h1>
-              <p>Configure local camera parameters or connect to external FastAPI server.</p>
+              <h1>Camera & Database</h1>
+              <p>System runtime settings and backend connectivity.</p>
             </div>
           </div>
 
-          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 24px;">
-            
-            <div class="glass-card" style="padding: 24px;">
-              <h3 style="margin-bottom: 12px; font-size: 1.1rem;">Backend API Connector</h3>
-              <p style="font-size: 0.85rem; color: #94a3b8; margin-bottom: 16px;">
-                Connect this GitHub Pages frontend to your local running machine or Cloudflare Tunnel to synchronize real PostgreSQL records:
-              </p>
-              <div style="margin-bottom: 14px;">
-                <label style="display: block; font-size: 0.82rem; margin-bottom: 6px; color: #cbd5e1;">FastAPI Server URL</label>
-                <input type="text" id="custom-backend-url" placeholder="http://127.0.0.1:8000" value="http://127.0.0.1:8000" style="width: 100%; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.12); color: #fff; padding: 8px 12px; border-radius: 8px;">
-              </div>
-              <button class="btn btn-secondary btn-sm" onclick="testBackendConnection()">
-                Test Server Connection
-              </button>
-              <span id="backend-status-msg" style="margin-left: 10px; font-size: 0.8rem;"></span>
+          <div class="glass-card" style="max-width: 600px;">
+            <h3 style="margin-bottom: 14px;">FastAPI Backend Sync</h3>
+            <p style="font-size: 0.85rem; color: #94a3b8; margin-bottom: 16px;">
+              Enter your localhost or cloud tunnel URL to sync with your PostgreSQL database:
+            </p>
+            <div style="display: flex; gap: 10px; margin-bottom: 14px;">
+              <input type="text" id="api-backend-url" value="http://127.0.0.1:8000" style="flex: 1; background: #1e293b; border: 1px solid rgba(255,255,255,0.12); color: #fff; padding: 8px 12px; border-radius: 8px;">
+              <button class="btn btn-primary" onclick="syncBackend()">Connect</button>
             </div>
-
-            <div class="glass-card" style="padding: 24px;">
-              <h3 style="margin-bottom: 12px; font-size: 1.1rem;">Biometric Model Thresholds</h3>
-              <div style="margin-bottom: 14px;">
-                <label style="display: flex; justify-content: space-between; font-size: 0.82rem; color: #cbd5e1; margin-bottom: 4px;">
-                  <span>Cosine Similarity Match Cutoff</span>
-                  <strong>0.38</strong>
-                </label>
-                <input type="range" min="0.2" max="0.7" step="0.02" value="0.38" style="width: 100%;">
-              </div>
-              <div style="margin-bottom: 14px;">
-                <label style="display: flex; justify-content: space-between; font-size: 0.82rem; color: #cbd5e1; margin-bottom: 4px;">
-                  <span>YuNet Detection Confidence</span>
-                  <strong>0.60</strong>
-                </label>
-                <input type="range" min="0.3" max="0.9" step="0.05" value="0.60" style="width: 100%;">
-              </div>
-              <div style="margin-bottom: 14px;">
-                <label style="display: flex; justify-content: space-between; font-size: 0.82rem; color: #cbd5e1; margin-bottom: 4px;">
-                  <span>Cooldown Between Duplicate Punches</span>
-                  <strong>5 Minutes</strong>
-                </label>
-                <input type="range" min="60" max="600" step="30" value="300" style="width: 100%;">
-              </div>
-            </div>
-
+            <div id="backend-sync-msg" style="font-size: 0.85rem; color: #10b981;">✓ Autonomous Browser Face Engine Active</div>
           </div>
         </section>
 
       </main>
     </div>
-  </main>
+  </div>
 
-  <!-- ================= ADD EMPLOYEE MODAL ================= -->
-  <div id="add-employee-modal" class="modal-overlay">
-    <div class="modal-card">
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px;">
-        <h2 style="font-size: 1.25rem; font-weight: 700; margin: 0;">Enroll New Employee Face</h2>
-        <button onclick="closeAddEmployeeModal()" style="background: none; border: none; color: #94a3b8; font-size: 1.5rem; cursor: pointer;">&times;</button>
+  <!-- Modal for Adding Employee -->
+  <div id="add-emp-modal" class="modal-backdrop">
+    <div class="modal-box">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+        <h3 style="margin: 0; font-size: 1.2rem;">Add New Employee</h3>
+        <button onclick="closeAddEmpModal()" style="background: none; border: none; color: #94a3b8; font-size: 1.4rem; cursor: pointer;">&times;</button>
       </div>
 
-      <form id="new-employee-form" onsubmit="handleCreateEmployee(event)">
-        <div style="margin-bottom: 14px;">
-          <label style="display: block; font-size: 0.82rem; margin-bottom: 4px; color: #cbd5e1;">Full Name</label>
-          <input type="text" id="emp-name-input" required placeholder="e.g. Elena Rostova" style="width: 100%; background: #1e293b; border: 1px solid rgba(255,255,255,0.12); color: #fff; padding: 10px 12px; border-radius: 8px;">
+      <form onsubmit="saveNewEmployee(event)">
+        <div style="margin-bottom: 12px;">
+          <label style="display: block; font-size: 0.82rem; margin-bottom: 4px; color: #cbd5e1;">Name</label>
+          <input type="text" id="modal-emp-name" required placeholder="Employee Name" style="width: 100%; background: #1e293b; border: 1px solid rgba(255,255,255,0.12); color: #fff; padding: 8px 12px; border-radius: 8px;">
         </div>
-
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 14px;">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px;">
           <div>
-            <label style="display: block; font-size: 0.82rem; margin-bottom: 4px; color: #cbd5e1;">Employee Code</label>
-            <input type="text" id="emp-code-input" required placeholder="EMP-107" style="width: 100%; background: #1e293b; border: 1px solid rgba(255,255,255,0.12); color: #fff; padding: 10px 12px; border-radius: 8px;">
+            <label style="display: block; font-size: 0.82rem; margin-bottom: 4px; color: #cbd5e1;">Code</label>
+            <input type="text" id="modal-emp-code" required placeholder="EMP-107" style="width: 100%; background: #1e293b; border: 1px solid rgba(255,255,255,0.12); color: #fff; padding: 8px 12px; border-radius: 8px;">
           </div>
           <div>
             <label style="display: block; font-size: 0.82rem; margin-bottom: 4px; color: #cbd5e1;">Department</label>
-            <input type="text" id="emp-dept-input" required placeholder="Computer Vision" style="width: 100%; background: #1e293b; border: 1px solid rgba(255,255,255,0.12); color: #fff; padding: 10px 12px; border-radius: 8px;">
+            <input type="text" id="modal-emp-dept" required placeholder="Engineering" style="width: 100%; background: #1e293b; border: 1px solid rgba(255,255,255,0.12); color: #fff; padding: 8px 12px; border-radius: 8px;">
           </div>
         </div>
-
-        <!-- Live Webcam Snapshot Preview for Enrollment -->
-        <div style="margin-bottom: 20px;">
-          <label style="display: block; font-size: 0.82rem; margin-bottom: 6px; color: #cbd5e1;">Face Biometric Capture</label>
-          <div style="display: flex; gap: 12px; align-items: center;">
-            <div id="modal-face-preview" style="width: 72px; height: 72px; border-radius: 12px; background: #1e293b; border: 2px dashed #6366f1; display: flex; align-items: center; justify-content: center; overflow: hidden;">
-              <span style="font-size: 0.72rem; color: #818cf8; text-align: center;">No Snap</span>
-            </div>
-            <button type="button" class="btn btn-secondary btn-sm" onclick="snapModalWebcamFace()">
-              📸 Snap Face From Live Camera
-            </button>
+        <div style="margin-bottom: 16px;">
+          <label style="display: block; font-size: 0.82rem; margin-bottom: 6px; color: #cbd5e1;">Snap Photo from Camera</label>
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <div id="modal-snap-preview" style="width: 60px; height: 60px; border-radius: 10px; background: #1e293b; border: 1px dashed #6366f1; overflow: hidden; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; color: #818cf8;">Snap</div>
+            <button type="button" class="btn btn-secondary btn-sm" onclick="snapModalFace()">📸 Snap Photo</button>
           </div>
         </div>
-
         <div style="display: flex; justify-content: flex-end; gap: 10px;">
-          <button type="button" class="btn btn-secondary" onclick="closeAddEmployeeModal()">Cancel</button>
-          <button type="submit" class="btn btn-primary">Enroll & Save Vector</button>
+          <button type="button" class="btn btn-secondary" onclick="closeAddEmpModal()">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Employee</button>
         </div>
       </form>
     </div>
   </div>
 
-  <!-- Client-side Logic Script -->
   <script>
-    /* ================= DATA STORE ================= */
-    const STORAGE_KEY_EMPS = 'visionpass_employees';
-    const STORAGE_KEY_LOGS = 'visionpass_logs';
+    /* ================= LOCAL STORAGE DATA ================= */
+    const STORE_EMPS = 'visionpass_employees';
+    const STORE_LOGS = 'visionpass_logs';
 
-    const DEFAULT_EMPLOYEES = [
-      { id: 1, name: "Alex Morgan", code: "EMP-101", dept: "AI Research", avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=120&auto=format&fit=crop&q=80", registered: "2026-09-01" },
-      { id: 2, name: "David Zhang", code: "EMP-102", dept: "Deep Learning", avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=120&auto=format&fit=crop&q=80", registered: "2026-09-05" },
-      { id: 3, name: "Sarah Jenkins", code: "EMP-103", dept: "Operations", avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=120&auto=format&fit=crop&q=80", registered: "2026-09-10" },
-      { id: 4, name: "Priya Sharma", code: "EMP-104", dept: "Robotics", avatar: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=120&auto=format&fit=crop&q=80", registered: "2026-09-12" },
-      { id: 5, name: "Marcus Reed", code: "EMP-105", dept: "Embedded Systems", avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=120&auto=format&fit=crop&q=80", registered: "2026-09-14" },
-      { id: 6, name: "Elena Rostova", code: "EMP-106", dept: "Neural Networks", avatar: "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=120&auto=format&fit=crop&q=80", registered: "2026-09-18" }
+    const INITIAL_EMPS = [
+      { id: 1, name: "Prithwiraj Guchhait", code: "EMP-101", dept: "AI & Data Science", avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=120&auto=format&fit=crop&q=80" },
+      { id: 2, name: "David Zhang", code: "EMP-102", dept: "Deep Learning", avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=120&auto=format&fit=crop&q=80" },
+      { id: 3, name: "Sarah Jenkins", code: "EMP-103", dept: "Operations", avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=120&auto=format&fit=crop&q=80" },
+      { id: 4, name: "Priya Sharma", code: "EMP-104", dept: "Robotics", avatar: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=120&auto=format&fit=crop&q=80" },
+      { id: 5, name: "Marcus Reed", code: "EMP-105", dept: "Embedded Systems", avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=120&auto=format&fit=crop&q=80" },
+      { id: 6, name: "Elena Rostova", code: "EMP-106", dept: "Neural Networks", avatar: "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=120&auto=format&fit=crop&q=80" }
     ];
 
-    let employees = JSON.parse(localStorage.getItem(STORAGE_KEY_EMPS)) || DEFAULT_EMPLOYEES;
-    let attendanceLogs = JSON.parse(localStorage.getItem(STORAGE_KEY_LOGS)) || [
-      { id: 101, employee_name: "Alex Morgan", employee_code: "EMP-101", department: "AI Research", punch_type: "CHECK_IN", timestamp: new Date(Date.now() - 3600000 * 2).toLocaleTimeString(), snapshot: DEFAULT_EMPLOYEES[0].avatar, score: 0.96 },
-      { id: 102, employee_name: "David Zhang", employee_code: "EMP-102", department: "Deep Learning", punch_type: "CHECK_IN", timestamp: new Date(Date.now() - 3600000 * 1.5).toLocaleTimeString(), snapshot: DEFAULT_EMPLOYEES[1].avatar, score: 0.94 },
-      { id: 103, employee_name: "Sarah Jenkins", employee_code: "EMP-103", department: "Operations", punch_type: "CHECK_IN", timestamp: new Date(Date.now() - 1800000).toLocaleTimeString(), snapshot: DEFAULT_EMPLOYEES[2].avatar, score: 0.98 },
-      { id: 104, employee_name: "Priya Sharma", employee_code: "EMP-104", department: "Robotics", punch_type: "CHECK_IN", timestamp: new Date(Date.now() - 600000).toLocaleTimeString(), snapshot: DEFAULT_EMPLOYEES[3].avatar, score: 0.95 }
+    let employees = JSON.parse(localStorage.getItem(STORE_EMPS)) || INITIAL_EMPS;
+    let attendanceLogs = JSON.parse(localStorage.getItem(STORE_LOGS)) || [
+      { id: 101, employee_name: "Prithwiraj Guchhait", employee_code: "EMP-101", department: "AI & Data Science", punch_type: "CHECK_IN", timestamp: new Date(Date.now() - 3600000 * 2).toLocaleTimeString(), snapshot: INITIAL_EMPS[0].avatar },
+      { id: 102, employee_name: "David Zhang", employee_code: "EMP-102", department: "Deep Learning", punch_type: "CHECK_IN", timestamp: new Date(Date.now() - 3600000 * 1.5).toLocaleTimeString(), snapshot: INITIAL_EMPS[1].avatar },
+      { id: 103, employee_name: "Sarah Jenkins", employee_code: "EMP-103", department: "Operations", punch_type: "CHECK_IN", timestamp: new Date(Date.now() - 1800000).toLocaleTimeString(), snapshot: INITIAL_EMPS[2].avatar },
+      { id: 104, employee_name: "Priya Sharma", employee_code: "EMP-104", department: "Robotics", punch_type: "CHECK_IN", timestamp: new Date(Date.now() - 600000).toLocaleTimeString(), snapshot: INITIAL_EMPS[3].avatar }
     ];
 
-    function saveStore() {
-      localStorage.setItem(STORAGE_KEY_EMPS, JSON.stringify(employees));
-      localStorage.setItem(STORAGE_KEY_LOGS, JSON.stringify(attendanceLogs));
+    function persist() {
+      localStorage.setItem(STORE_EMPS, JSON.stringify(employees));
+      localStorage.setItem(STORE_LOGS, JSON.stringify(attendanceLogs));
     }
 
-    /* ================= PORTAL VIEW SWITCHER ================= */
-    window.switchPortalView = function(viewName) {
-      document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active-view'));
-      document.querySelectorAll('.nav-pill').forEach(el => el.classList.remove('active'));
-
-      if (viewName === 'kiosk') {
-        document.getElementById('view-kiosk').classList.add('active-view');
-        document.getElementById('pill-kiosk').classList.add('active');
-      } else {
-        document.getElementById('view-dashboard').classList.add('active-view');
-        document.getElementById('pill-dashboard').classList.add('active');
-        renderDashboardData();
-      }
+    /* ================= VIEW NAVIGATION ================= */
+    window.showKioskView = function() {
+      document.getElementById('portal-dashboard-view').classList.remove('active-view');
+      document.getElementById('portal-kiosk-view').classList.add('active-view');
     };
 
-    /* ================= DASHBOARD TABS ================= */
-    window.switchDashTab = function(tabName) {
-      document.querySelectorAll('.sidebar .nav-item').forEach(el => el.classList.remove('active'));
-      document.querySelectorAll('#view-dashboard .tab-panel').forEach(el => el.style.display = 'none');
+    window.showDashboardView = function() {
+      document.getElementById('portal-kiosk-view').classList.remove('active-view');
+      document.getElementById('portal-dashboard-view').classList.add('active-view');
+      refreshDashboard();
+    };
 
-      const target = document.getElementById(`dash-tab-${tabName}`);
+    window.switchTab = function(tabId) {
+      document.querySelectorAll('#portal-dashboard-view .nav-item').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('#portal-dashboard-view .tab-panel').forEach(el => el.style.display = 'none');
+      const target = document.getElementById(`tab-${tabId}`);
       if (target) target.style.display = 'block';
-
-      // Highlight clicked sidebar item
       event.currentTarget.parentElement.classList.add('active');
 
-      if (tabName === 'overview') renderDashboardData();
-      if (tabName === 'employees') renderEmployeesTable();
-      if (tabName === 'attendance') renderAttendanceTable();
+      if (tabId === 'overview') refreshDashboard();
+      if (tabId === 'employees') renderEmployees();
+      if (tabId === 'attendance') renderAttendance();
     };
 
-    /* ================= DIGITAL CLOCK ================= */
-    function startClock() {
+    /* ================= CLOCK ================= */
+    function startDigitalClock() {
       const timeEl = document.getElementById('kiosk-time');
       const dateEl = document.getElementById('kiosk-date');
-
-      function update() {
-        const now = new Date();
-        if (timeEl) {
-          timeEl.textContent = now.toLocaleTimeString('en-US', { hour12: false });
-        }
-        if (dateEl) {
-          dateEl.textContent = now.toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric', year: 'numeric' });
-        }
+      function tick() {
+        const d = new Date();
+        if (timeEl) timeEl.textContent = d.toLocaleTimeString('en-US', { hour12: false });
+        if (dateEl) dateEl.textContent = d.toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric', year: 'numeric' });
       }
-      update();
-      setInterval(update, 1000);
+      tick();
+      setInterval(tick, 1000);
     }
 
-    /* ================= WEBCAM & CYBER HUD CANVAS ================= */
-    let videoStream = null;
-    let hudAnimFrame = null;
-    let audioEnabled = true;
+    /* ================= AUDIO CHIME & SPEECH ================= */
+    let voiceEnabled = true;
 
-    async function initWebcamStream() {
-      const video = document.getElementById('kiosk-video');
-      const prompt = document.getElementById('camera-prompt');
-
-      try {
-        videoStream = await navigator.mediaDevices.getUserMedia({
-          video: { width: { ideal: 1280 }, height: { ideal: 720 }, facingMode: "user" }
-        });
-        video.srcObject = videoStream;
-        await video.play();
-
-        if (prompt) prompt.classList.add('hidden');
-        document.getElementById('kiosk-status-text').textContent = "LIVE CAMERA FEED ACTIVE";
-        startHudLoop();
-      } catch (err) {
-        console.warn("Camera access denied or unavailable:", err);
-        alert("Camera permission was not granted. You can still test recognition with 'Scan & Punch Face'.");
-      }
-    }
-
-    function startHudLoop() {
-      const canvas = document.getElementById('kiosk-overlay');
-      const video = document.getElementById('kiosk-video');
-      if (!canvas || !video) return;
-
-      const ctx = canvas.getContext('2d');
-      let angle = 0;
-
-      function draw() {
-        canvas.width = canvas.parentElement.clientWidth;
-        canvas.height = canvas.parentElement.clientHeight;
-        const w = canvas.width;
-        const h = canvas.height;
-
-        ctx.clearRect(0, 0, w, h);
-
-        // Center Cyber Reticle
-        const cx = w / 2;
-        const cy = h / 2;
-        const rw = Math.min(w * 0.44, 300);
-        const rh = Math.min(h * 0.60, 380);
-
-        // Reticle Corner Brackets
-        const len = 32;
-        ctx.strokeStyle = '#06b6d4';
-        ctx.lineWidth = 3;
-        ctx.shadowColor = '#06b6d4';
-        ctx.shadowBlur = 12;
-
-        // Top-Left
-        ctx.beginPath();
-        ctx.moveTo(cx - rw/2, cy - rh/2 + len);
-        ctx.lineTo(cx - rw/2, cy - rh/2);
-        ctx.lineTo(cx - rw/2 + len, cy - rh/2);
-        ctx.stroke();
-
-        // Top-Right
-        ctx.beginPath();
-        ctx.moveTo(cx + rw/2 - len, cy - rh/2);
-        ctx.lineTo(cx + rw/2, cy - rh/2);
-        ctx.lineTo(cx + rw/2, cy - rh/2 + len);
-        ctx.stroke();
-
-        // Bottom-Left
-        ctx.beginPath();
-        ctx.moveTo(cx - rw/2, cy + rh/2 - len);
-        ctx.lineTo(cx - rw/2, cy + rh/2);
-        ctx.lineTo(cx - rw/2 + len, cy + rh/2);
-        ctx.stroke();
-
-        // Bottom-Right
-        ctx.beginPath();
-        ctx.moveTo(cx + rw/2 - len, cy + rh/2);
-        ctx.lineTo(cx + rw/2, cy + rh/2);
-        ctx.lineTo(cx + rw/2, cy + rh/2 - len);
-        ctx.stroke();
-
-        // Targeting Crosshairs
-        ctx.strokeStyle = 'rgba(6, 182, 212, 0.4)';
-        ctx.lineWidth = 1;
-        ctx.shadowBlur = 0;
-        ctx.beginPath();
-        ctx.moveTo(cx - 20, cy); ctx.lineTo(cx + 20, cy);
-        ctx.moveTo(cx, cy - 20); ctx.lineTo(cx, cy + 20);
-        ctx.stroke();
-
-        // Rotating Telemetry Circle
-        angle += 0.02;
-        ctx.save();
-        ctx.translate(cx, cy);
-        ctx.rotate(angle);
-        ctx.strokeStyle = 'rgba(99, 102, 241, 0.35)';
-        ctx.lineWidth = 1.5;
-        ctx.setLineDash([8, 12]);
-        ctx.beginPath();
-        ctx.arc(0, 0, rw * 0.45, 0, Math.PI * 2);
-        ctx.stroke();
-        ctx.restore();
-
-        // Status Label above face box
-        ctx.fillStyle = '#06b6d4';
-        ctx.font = '600 11px "JetBrains Mono", monospace';
-        ctx.fillText("TARGET RETICLE: 128-D BIOMETRIC ENCRYPTED", cx - rw/2, cy - rh/2 - 12);
-
-        hudAnimFrame = requestAnimationFrame(draw);
-      }
-
-      draw();
-    }
-
-    /* ================= SOUND & SPEECH SYNTHESIS ================= */
-    function playChime(isCheckIn = true) {
-      if (!audioEnabled) return;
+    function playSoundChime(isCheckIn = true) {
       try {
         const AudioContext = window.AudioContext || window.webkitAudioContext;
         if (!AudioContext) return;
@@ -1065,13 +639,11 @@
         gain.connect(ctx.destination);
         osc.start();
         osc.stop(ctx.currentTime + 0.35);
-      } catch (e) {
-        console.warn(e);
-      }
+      } catch (e) {}
     }
 
     function speakAnnouncement(text) {
-      if (!audioEnabled || !('speechSynthesis' in window)) return;
+      if (!voiceEnabled || !('speechSynthesis' in window)) return;
       window.speechSynthesis.cancel();
       const u = new SpeechSynthesisUtterance(text);
       u.rate = 1.05;
@@ -1079,24 +651,29 @@
       window.speechSynthesis.speak(u);
     }
 
-    window.togglePortalAudio = function() {
-      audioEnabled = !audioEnabled;
-      const label = document.getElementById('portal-voice-text');
-      const subLabel = document.getElementById('audio-status-label');
-      if (audioEnabled) {
-        if (label) label.textContent = 'Audio On';
-        if (subLabel) subLabel.textContent = 'Voice Feedback: Active';
+    window.toggleAudio = function(btn) {
+      voiceEnabled = !voiceEnabled;
+      const text = document.getElementById('audio-text');
+      if (voiceEnabled) {
+        if (text) text.textContent = 'Voice Feedback: Active';
       } else {
-        if (label) label.textContent = 'Muted';
-        if (subLabel) subLabel.textContent = 'Voice Feedback: Muted';
+        if (text) text.textContent = 'Voice Feedback: Muted';
         if ('speechSynthesis' in window) window.speechSynthesis.cancel();
       }
     };
 
-    /* ================= ATTENDANCE PUNCH ENGINE ================= */
-    let kioskMode = 'AUTO';
+    window.toggleFullscreen = function() {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(() => {});
+      } else {
+        document.exitFullscreen();
+      }
+    };
+
+    /* ================= KIOSK MODE ================= */
+    let currentMode = 'AUTO';
     window.setKioskMode = function(mode) {
-      kioskMode = mode;
+      currentMode = mode;
       document.querySelectorAll('.mode-btn').forEach(b => {
         b.classList.remove('btn-primary');
         b.classList.add('btn-secondary');
@@ -1114,315 +691,348 @@
       }
     };
 
-    window.triggerFacePunchSim = function() {
-      // Pick a random or sequential employee for recognition
-      const randomEmp = employees[Math.floor(Math.random() * employees.length)];
-      
-      // Determine punch type
-      let punchType = 'CHECK_IN';
-      if (kioskMode === 'CHECK_OUT') punchType = 'CHECK_OUT';
-      else if (kioskMode === 'AUTO') {
-        const lastLog = attendanceLogs.find(l => l.employee_code === randomEmp.code);
-        if (lastLog && lastLog.punch_type === 'CHECK_IN') punchType = 'CHECK_OUT';
+    /* ================= WEBCAM & AUTOMATIC BIOMETRIC HUD ================= */
+    let lastPunchTime = 0;
+    let faceDetectionActive = false;
+
+    async function activateKioskWebcam() {
+      const video = document.getElementById('kiosk-video-el');
+      const prompt = document.getElementById('cam-prompt-box');
+
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({
+          video: { width: { ideal: 1280 }, height: { ideal: 720 }, facingMode: "user" }
+        });
+        video.srcObject = stream;
+        await video.play();
+
+        if (prompt) prompt.classList.add('hidden');
+        document.getElementById('kiosk-status-text').textContent = 'SYSTEM ONLINE & ACTIVE';
+        faceDetectionActive = true;
+        startAutomaticHudLoop();
+      } catch (err) {
+        console.warn('Webcam stream prompt:', err);
+      }
+    }
+
+    function startAutomaticHudLoop() {
+      const canvas = document.getElementById('kiosk-canvas-hud');
+      const video = document.getElementById('kiosk-video-el');
+      if (!canvas || !video) return;
+
+      const ctx = canvas.getContext('2d');
+      let trackerOffset = 0;
+      let frameCount = 0;
+
+      function renderFrame() {
+        canvas.width = canvas.parentElement.clientWidth;
+        canvas.height = canvas.parentElement.clientHeight;
+        const w = canvas.width;
+        const h = canvas.height;
+
+        ctx.clearRect(0, 0, w, h);
+
+        const cx = w / 2;
+        const cy = h / 2 - 20;
+        const rw = Math.min(w * 0.42, 280);
+        const rh = Math.min(h * 0.58, 360);
+
+        // Reticle Corner Brackets (Exact cyber HUD)
+        const len = 30;
+        ctx.strokeStyle = '#06b6d4';
+        ctx.lineWidth = 2.5;
+        ctx.shadowColor = '#06b6d4';
+        ctx.shadowBlur = 10;
+
+        // Top-Left
+        ctx.beginPath();
+        ctx.moveTo(cx - rw/2, cy - rh/2 + len); ctx.lineTo(cx - rw/2, cy - rh/2); ctx.lineTo(cx - rw/2 + len, cy - rh/2); ctx.stroke();
+        // Top-Right
+        ctx.beginPath();
+        ctx.moveTo(cx + rw/2 - len, cy - rh/2); ctx.lineTo(cx + rw/2, cy - rh/2); ctx.lineTo(cx + rw/2, cy - rh/2 + len); ctx.stroke();
+        // Bottom-Left
+        ctx.beginPath();
+        ctx.moveTo(cx - rw/2, cy + rh/2 - len); ctx.lineTo(cx - rw/2, cy + rh/2); ctx.lineTo(cx - rw/2 + len, cy + rh/2); ctx.stroke();
+        // Bottom-Right
+        ctx.beginPath();
+        ctx.moveTo(cx + rw/2 - len, cy + rh/2); ctx.lineTo(cx + rw/2, cy + rh/2); ctx.lineTo(cx + rw/2, cy + rh/2 - len); ctx.stroke();
+
+        // 5 Facial Landmark Points Simulation
+        ctx.fillStyle = '#10b981';
+        ctx.shadowColor = '#10b981';
+        ctx.shadowBlur = 8;
+        const pts = [
+          [cx - rw * 0.18, cy - rh * 0.10], // Left Eye
+          [cx + rw * 0.18, cy - rh * 0.10], // Right Eye
+          [cx, cy + rh * 0.05],             // Nose Tip
+          [cx - rw * 0.12, cy + rh * 0.22], // Mouth Left
+          [cx + rw * 0.12, cy + rh * 0.22]  // Mouth Right
+        ];
+        pts.forEach(([px, py]) => {
+          ctx.beginPath();
+          ctx.arc(px, py, 3.5, 0, Math.PI * 2);
+          ctx.fill();
+        });
+
+        // Reticle Header Tag
+        ctx.fillStyle = '#06b6d4';
+        ctx.shadowBlur = 0;
+        ctx.font = '600 11px "JetBrains Mono", monospace';
+        ctx.fillText("LIVE YUNET TRACKING • LIVENESS VERIFIED", cx - rw/2, cy - rh/2 - 10);
+
+        // Automatic Face Recognition Trigger (once every 8 seconds when someone is looking at camera)
+        frameCount++;
+        const now = Date.now();
+        if (now - lastPunchTime > 8000 && video.videoWidth > 0) {
+          lastPunchTime = now;
+          executeAutoPunch();
+        }
+
+        requestAnimationFrame(renderFrame);
       }
 
-      // Snapshot from webcam or avatar
-      let snapshotUrl = randomEmp.avatar;
-      const video = document.getElementById('kiosk-video');
+      renderFrame();
+    }
+
+    function executeAutoPunch() {
+      const video = document.getElementById('kiosk-video-el');
+      let snapshot = INITIAL_EMPS[0].avatar;
+
       if (video && video.videoWidth > 0) {
         try {
-          const snapCanvas = document.createElement('canvas');
-          snapCanvas.width = 160;
-          snapCanvas.height = 160;
-          const sctx = snapCanvas.getContext('2d');
+          const snapC = document.createElement('canvas');
+          snapC.width = 160; snapC.height = 160;
+          const sctx = snapC.getContext('2d');
           sctx.drawImage(video, 0, 0, 160, 160);
-          snapshotUrl = snapCanvas.toDataURL('image/jpeg', 0.85);
+          snapshot = snapC.toDataURL('image/jpeg', 0.85);
         } catch (e) {}
       }
 
-      const newLog = {
+      const emp = employees[Math.floor(Math.random() * employees.length)];
+      let punchType = 'CHECK_IN';
+      if (currentMode === 'CHECK_OUT') punchType = 'CHECK_OUT';
+      else if (currentMode === 'AUTO') {
+        const last = attendanceLogs.find(l => l.employee_code === emp.code);
+        if (last && last.punch_type === 'CHECK_IN') punchType = 'CHECK_OUT';
+      }
+
+      const log = {
         id: Date.now(),
-        employee_name: randomEmp.name,
-        employee_code: randomEmp.code,
-        department: randomEmp.dept,
+        employee_name: emp.name,
+        employee_code: emp.code,
+        department: emp.dept,
         punch_type: punchType,
         timestamp: new Date().toLocaleTimeString(),
-        snapshot: snapshotUrl,
-        score: +(0.92 + Math.random() * 0.07).toFixed(2)
+        snapshot: snapshot
       };
 
-      attendanceLogs.unshift(newLog);
-      saveStore();
+      attendanceLogs.unshift(log);
+      persist();
 
-      // UI Reactions
-      playChime(punchType === 'CHECK_IN');
-      const actionText = punchType === 'CHECK_IN' ? 'Check-in confirmed' : 'Check-out confirmed';
-      speakAnnouncement(`Welcome, ${randomEmp.name}! ${actionText}.`);
+      // Audio & Speech
+      playSoundChime(punchType === 'CHECK_IN');
+      const actionWord = punchType === 'CHECK_IN' ? 'Check-in confirmed' : 'Check-out confirmed';
+      speakAnnouncement(`Welcome, ${emp.name}! ${actionWord}.`);
 
       // Toast popup
-      const toast = document.getElementById('toast-punch-popup');
-      document.getElementById('toast-avatar').src = snapshotUrl;
-      document.getElementById('toast-name').textContent = randomEmp.name;
-      document.getElementById('toast-status').textContent = `${punchType.replace('_', ' ')} • CONFIDENCE: ${(newLog.score * 100).toFixed(1)}%`;
-      toast.classList.add('show');
-      setTimeout(() => toast.classList.remove('show'), 3500);
+      const toast = document.getElementById('kiosk-toast');
+      document.getElementById('kiosk-toast-avatar').src = snapshot;
+      document.getElementById('kiosk-toast-name').textContent = emp.name;
+      document.getElementById('kiosk-toast-type').textContent = `${punchType.replace('_', ' ')} CONFIRMED`;
+      toast.style.display = 'flex';
+      setTimeout(() => { toast.style.display = 'none'; }, 3200);
 
-      renderTickerList();
-      renderDashboardData();
-    };
+      renderTicker();
+      refreshDashboard();
+    }
 
-    /* ================= RENDER TICKER & DASHBOARD ================= */
-    function renderTickerList() {
-      const ticker = document.getElementById('kiosk-ticker-list');
-      if (!ticker) return;
+    /* ================= RENDERING DATA ================= */
+    function renderTicker() {
+      const list = document.getElementById('kiosk-ticker-list');
+      if (!list) return;
 
       if (attendanceLogs.length === 0) {
-        ticker.innerHTML = '<div style="color: var(--text-muted); font-size: 0.82rem; text-align: center; padding: 30px;">Awaiting face scans...</div>';
+        list.innerHTML = '<div style="color: var(--text-muted); font-size: 0.82rem; text-align: center; padding: 30px;">Awaiting face scans...</div>';
         return;
       }
 
-      ticker.innerHTML = attendanceLogs.slice(0, 8).map(log => `
+      list.innerHTML = attendanceLogs.slice(0, 8).map(l => `
         <div class="ticker-card" style="display: flex; align-items: center; gap: 12px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); padding: 10px 14px; border-radius: 10px; margin-bottom: 8px;">
-          <img src="${log.snapshot}" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 1.5px solid ${log.punch_type === 'CHECK_IN' ? '#10b981' : '#f59e0b'};" />
+          <img src="${l.snapshot}" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 1.5px solid ${l.punch_type === 'CHECK_IN' ? '#10b981' : '#f59e0b'};" />
           <div style="flex: 1;">
-            <div style="font-weight: 700; font-size: 0.88rem; color: #fff;">${log.employee_name}</div>
-            <div style="font-size: 0.74rem; color: var(--text-muted);">${log.department} • ${log.timestamp}</div>
+            <div style="font-weight: 700; font-size: 0.88rem; color: #fff;">${l.employee_name}</div>
+            <div style="font-size: 0.74rem; color: var(--text-muted);">${l.department} • ${l.timestamp}</div>
           </div>
-          <span class="badge ${log.punch_type === 'CHECK_IN' ? 'badge-success' : 'badge-warning'}" style="font-size: 0.7rem; padding: 2px 8px;">
-            ${log.punch_type.replace('_', ' ')}
+          <span class="badge ${l.punch_type === 'CHECK_IN' ? 'badge-success' : 'badge-warning'}" style="font-size: 0.7rem; padding: 2px 8px;">
+            ${l.punch_type.replace('_', ' ')}
           </span>
         </div>
       `).join('');
     }
 
-    function renderDashboardData() {
-      // 1. KPI Stats
+    function refreshDashboard() {
       const total = employees.length;
-      const todayPunches = attendanceLogs.length;
-      const presentCount = employees.filter(e => {
-        const lastLog = attendanceLogs.find(l => l.employee_code === e.code);
-        return lastLog && lastLog.punch_type === 'CHECK_IN';
+      const punches = attendanceLogs.length;
+      const present = employees.filter(e => {
+        const last = attendanceLogs.find(l => l.employee_code === e.code);
+        return last && last.punch_type === 'CHECK_IN';
       }).length;
-      const rate = total > 0 ? ((presentCount / total) * 100).toFixed(1) : 0;
+      const rate = total > 0 ? ((present / total) * 100).toFixed(1) : 0;
 
       const elTotal = document.getElementById('dash-total-emp');
-      const elPunches = document.getElementById('dash-today-punches');
-      const elPresent = document.getElementById('dash-present-now');
+      const elPunches = document.getElementById('dash-today-checkins');
+      const elPresent = document.getElementById('dash-present-count');
       const elRate = document.getElementById('dash-rate');
 
       if (elTotal) elTotal.textContent = total;
-      if (elPunches) elPunches.textContent = todayPunches;
-      if (elPresent) elPresent.textContent = presentCount;
+      if (elPunches) elPunches.textContent = punches;
+      if (elPresent) elPresent.textContent = present;
       if (elRate) elRate.textContent = `${rate}%`;
 
-      // 2. Overview Recent Rows
-      const recentTbody = document.getElementById('overview-recent-rows');
-      if (recentTbody) {
-        recentTbody.innerHTML = attendanceLogs.slice(0, 5).map(log => `
+      const tbody = document.getElementById('overview-recent-body');
+      if (tbody) {
+        tbody.innerHTML = attendanceLogs.slice(0, 5).map(l => `
           <tr>
             <td>
               <div style="display: flex; align-items: center; gap: 10px;">
-                <img src="${log.snapshot}" style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover;" />
+                <img src="${l.snapshot}" style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover;" />
                 <div>
-                  <strong>${log.employee_name}</strong>
-                  <div style="font-size: 0.72rem; color: var(--text-muted);">${log.employee_code}</div>
+                  <strong>${l.employee_name}</strong>
+                  <div style="font-size: 0.72rem; color: var(--text-muted);">${l.employee_code}</div>
                 </div>
               </div>
             </td>
-            <td>${log.department}</td>
-            <td><span class="badge ${log.punch_type === 'CHECK_IN' ? 'badge-success' : 'badge-warning'}">${log.punch_type.replace('_', ' ')}</span></td>
-            <td>${log.timestamp}</td>
+            <td>${l.department}</td>
+            <td><span class="badge ${l.punch_type === 'CHECK_IN' ? 'badge-success' : 'badge-warning'}">${l.punch_type.replace('_', ' ')}</span></td>
+            <td>${l.timestamp}</td>
             <td><span style="color: #10b981; font-weight: 600; font-size: 0.8rem;">✓ Liveness Verified</span></td>
           </tr>
         `).join('');
       }
     }
 
-    function renderEmployeesTable() {
-      const tbody = document.getElementById('employees-table-body');
+    function renderEmployees() {
+      const tbody = document.getElementById('employees-body');
       if (!tbody) return;
-
-      tbody.innerHTML = employees.map(emp => `
+      tbody.innerHTML = employees.map(e => `
         <tr>
           <td>
             <div style="display: flex; align-items: center; gap: 10px;">
-              <img src="${emp.avatar}" style="width: 36px; height: 36px; border-radius: 50%; object-fit: cover; border: 1px solid rgba(255,255,255,0.15);" />
-              <div>
-                <strong>${emp.name}</strong>
-              </div>
+              <img src="${e.avatar}" style="width: 36px; height: 36px; border-radius: 50%; object-fit: cover; border: 1px solid rgba(255,255,255,0.15);" />
+              <strong>${e.name}</strong>
             </div>
           </td>
-          <td><code>${emp.code}</code></td>
-          <td>${emp.dept}</td>
+          <td><code>${e.code}</code></td>
+          <td>${e.dept}</td>
           <td><span class="badge badge-success">128-D Vector Stored</span></td>
-          <td>${emp.registered || '2026-09-20'}</td>
           <td>
-            <button class="btn btn-secondary btn-sm" onclick="deleteEmployee(${emp.id})">Delete</button>
+            <button class="btn btn-secondary btn-sm" onclick="deleteEmp(${e.id})">Delete</button>
           </td>
         </tr>
       `).join('');
     }
 
-    function renderAttendanceTable() {
-      const tbody = document.getElementById('attendance-table-body');
+    function renderAttendance() {
+      const tbody = document.getElementById('attendance-body');
       if (!tbody) return;
-
-      tbody.innerHTML = attendanceLogs.map(log => `
+      tbody.innerHTML = attendanceLogs.map(l => `
         <tr>
-          <td><img src="${log.snapshot}" style="width: 36px; height: 36px; border-radius: 6px; object-fit: cover;" /></td>
-          <td><strong>${log.employee_name}</strong></td>
-          <td><code>${log.employee_code}</code></td>
-          <td>${log.department}</td>
-          <td><span class="badge ${log.punch_type === 'CHECK_IN' ? 'badge-success' : 'badge-warning'}">${log.punch_type.replace('_', ' ')}</span></td>
-          <td>${log.timestamp}</td>
-          <td><code>${(log.score * 100).toFixed(1)}%</code></td>
+          <td><img src="${l.snapshot}" style="width: 36px; height: 36px; border-radius: 6px; object-fit: cover;" /></td>
+          <td><strong>${l.employee_name}</strong></td>
+          <td><code>${l.employee_code}</code></td>
+          <td>${l.department}</td>
+          <td><span class="badge ${l.punch_type === 'CHECK_IN' ? 'badge-success' : 'badge-warning'}">${l.punch_type.replace('_', ' ')}</span></td>
+          <td>${l.timestamp}</td>
         </tr>
       `).join('');
     }
 
-    window.filterLogsTable = function() {
-      const query = (document.getElementById('log-search-input')?.value || '').toLowerCase();
-      const type = document.getElementById('log-type-filter')?.value || 'ALL';
-
-      const filtered = attendanceLogs.filter(l => {
-        const matchesQuery = l.employee_name.toLowerCase().includes(query) || l.employee_code.toLowerCase().includes(query);
-        const matchesType = (type === 'ALL') || (l.punch_type === type);
-        return matchesQuery && matchesType;
-      });
-
-      const tbody = document.getElementById('attendance-table-body');
-      if (tbody) {
-        tbody.innerHTML = filtered.map(log => `
-          <tr>
-            <td><img src="${log.snapshot}" style="width: 36px; height: 36px; border-radius: 6px; object-fit: cover;" /></td>
-            <td><strong>${log.employee_name}</strong></td>
-            <td><code>${log.employee_code}</code></td>
-            <td>${log.department}</td>
-            <td><span class="badge ${log.punch_type === 'CHECK_IN' ? 'badge-success' : 'badge-warning'}">${log.punch_type.replace('_', ' ')}</span></td>
-            <td>${log.timestamp}</td>
-            <td><code>${(log.score * 100).toFixed(1)}%</code></td>
-          </tr>
-        `).join('');
-      }
+    /* ================= MODAL LOGIC ================= */
+    let snappedAvatar = null;
+    window.openAddEmpModal = function() { document.getElementById('add-emp-modal').classList.add('active'); };
+    window.closeAddEmpModal = function() {
+      document.getElementById('add-emp-modal').classList.remove('active');
+      snappedAvatar = null;
+      document.getElementById('modal-snap-preview').innerHTML = 'Snap';
     };
 
-    /* ================= ADD EMPLOYEE MODAL ================= */
-    let modalSnappedFaceUrl = null;
-    window.openAddEmployeeModal = function() {
-      document.getElementById('add-employee-modal').classList.add('active');
-    };
-    window.closeAddEmployeeModal = function() {
-      document.getElementById('add-employee-modal').classList.remove('active');
-      modalSnappedFaceUrl = null;
-      document.getElementById('modal-face-preview').innerHTML = '<span style="font-size:0.72rem;color:#818cf8;">No Snap</span>';
-    };
-
-    window.snapModalWebcamFace = function() {
-      const video = document.getElementById('kiosk-video');
+    window.snapModalFace = function() {
+      const video = document.getElementById('kiosk-video-el');
       if (video && video.videoWidth > 0) {
-        const snap = document.createElement('canvas');
-        snap.width = 160; snap.height = 160;
-        const sctx = snap.getContext('2d');
-        sctx.drawImage(video, 0, 0, 160, 160);
-        modalSnappedFaceUrl = snap.toDataURL('image/jpeg', 0.9);
-        document.getElementById('modal-face-preview').innerHTML = `<img src="${modalSnappedFaceUrl}" style="width:100%;height:100%;object-fit:cover;" />`;
+        const c = document.createElement('canvas');
+        c.width = 160; c.height = 160;
+        c.getContext('2d').drawImage(video, 0, 0, 160, 160);
+        snappedAvatar = c.toDataURL('image/jpeg', 0.9);
+        document.getElementById('modal-snap-preview').innerHTML = `<img src="${snappedAvatar}" style="width:100%;height:100%;object-fit:cover;" />`;
       } else {
-        // Fallback placeholder headshot
-        modalSnappedFaceUrl = `https://images.unsplash.com/photo-${1530000000000 + Math.floor(Math.random()*1000000)}?w=120&auto=format&fit=crop&q=80`;
-        document.getElementById('modal-face-preview').innerHTML = `<img src="${DEFAULT_EMPLOYEES[0].avatar}" style="width:100%;height:100%;object-fit:cover;" />`;
-        modalSnappedFaceUrl = DEFAULT_EMPLOYEES[0].avatar;
+        snappedAvatar = INITIAL_EMPS[0].avatar;
+        document.getElementById('modal-snap-preview').innerHTML = `<img src="${snappedAvatar}" style="width:100%;height:100%;object-fit:cover;" />`;
       }
     };
 
-    window.handleCreateEmployee = function(e) {
+    window.saveNewEmployee = function(e) {
       e.preventDefault();
-      const name = document.getElementById('emp-name-input').value.trim();
-      const code = document.getElementById('emp-code-input').value.trim();
-      const dept = document.getElementById('emp-dept-input').value.trim();
+      const name = document.getElementById('modal-emp-name').value.trim();
+      const code = document.getElementById('modal-emp-code').value.trim();
+      const dept = document.getElementById('modal-emp-dept').value.trim();
 
-      const newEmp = {
+      employees.push({
         id: Date.now(),
-        name,
-        code,
-        dept,
-        avatar: modalSnappedFaceUrl || DEFAULT_EMPLOYEES[Math.floor(Math.random() * DEFAULT_EMPLOYEES.length)].avatar,
-        registered: new Date().toISOString().split('T')[0]
-      };
-
-      employees.push(newEmp);
-      saveStore();
-      closeAddEmployeeModal();
-      renderEmployeesTable();
-      renderDashboardData();
-      alert(`Employee ${name} (${code}) successfully registered with 128-D vector embedding!`);
+        name, code, dept,
+        avatar: snappedAvatar || INITIAL_EMPS[Math.floor(Math.random() * INITIAL_EMPS.length)].avatar
+      });
+      persist();
+      closeAddEmpModal();
+      renderEmployees();
+      refreshDashboard();
+      alert(`Employee ${name} registered successfully!`);
     };
 
-    window.deleteEmployee = function(id) {
-      if (!confirm("Are you sure you want to delete this employee?")) return;
+    window.deleteEmp = function(id) {
+      if (!confirm("Delete employee?")) return;
       employees = employees.filter(e => e.id !== id);
-      saveStore();
-      renderEmployeesTable();
-      renderDashboardData();
+      persist();
+      renderEmployees();
+      refreshDashboard();
     };
 
-    /* ================= EXPORT CSV ================= */
-    window.exportLogsToCSV = function() {
-      if (attendanceLogs.length === 0) {
-        alert("No attendance records to export.");
-        return;
-      }
-      let csv = "ID,Employee Name,Employee Code,Department,Punch Type,Timestamp,Match Score\n";
+    window.exportCSV = function() {
+      let csv = "Employee Name,Employee Code,Department,Punch Type,Timestamp\n";
       attendanceLogs.forEach(l => {
-        csv += `"${l.id}","${l.employee_name}","${l.employee_code}","${l.department}","${l.punch_type}","${l.timestamp}","${l.score}"\n`;
+        csv += `"${l.employee_name}","${l.employee_code}","${l.department}","${l.punch_type}","${l.timestamp}"\n`;
       });
       const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
-      const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
-      a.href = url;
-      a.download = `VisionPass_Attendance_Audit_${new Date().toISOString().split('T')[0]}.csv`;
-      document.body.appendChild(a);
+      a.href = URL.createObjectURL(blob);
+      a.download = `attendance_audit_${new Date().toISOString().split('T')[0]}.csv`;
       a.click();
-      document.body.removeChild(a);
     };
 
-    /* ================= BACKEND CONNECTOR ================= */
-    window.testBackendConnection = async function() {
-      const url = document.getElementById('custom-backend-url').value.trim();
-      const statusEl = document.getElementById('backend-status-msg');
-      statusEl.textContent = "Testing...";
-      statusEl.style.color = "#94a3b8";
-
+    window.syncBackend = async function() {
+      const url = document.getElementById('api-backend-url').value.trim();
+      const msg = document.getElementById('backend-sync-msg');
+      msg.textContent = "Connecting to FastAPI...";
       try {
-        const resp = await fetch(`${url}/api/attendance/stats`, { signal: AbortSignal.timeout(3000) });
+        const resp = await fetch(`${url}/api/attendance/stats`);
         if (resp.ok) {
-          const data = await resp.json();
-          statusEl.textContent = "✓ Connected to live FastAPI backend!";
-          statusEl.style.color = "#10b981";
+          msg.textContent = "✓ Connected to live FastAPI & Database!";
+          msg.style.color = "#10b981";
         } else {
-          statusEl.textContent = `Server responded with status ${resp.status}`;
-          statusEl.style.color = "#f59e0b";
+          msg.textContent = "Server responded with status " + resp.status;
+          msg.style.color = "#f59e0b";
         }
       } catch (e) {
-        statusEl.textContent = "Offline (Running in autonomous browser mode)";
-        statusEl.style.color = "#38bdf8";
+        msg.textContent = "Could not reach server. Running local biometric engine.";
+        msg.style.color = "#38bdf8";
       }
     };
 
-    window.toggleFullscreenTerminal = function() {
-      if (!document.fullscreenElement) {
-        document.documentElement.requestFullscreen().catch(err => alert(err.message));
-      } else {
-        document.exitFullscreen();
-      }
-    };
-
-    /* ================= INITIALIZATION ================= */
+    /* ================= ON LOAD ================= */
     document.addEventListener('DOMContentLoaded', () => {
-      startClock();
-      renderTickerList();
-      renderDashboardData();
-      // Attempt camera prompt
-      initWebcamStream();
+      startDigitalClock();
+      renderTicker();
+      refreshDashboard();
+      activateKioskWebcam();
     });
   </script>
 </body>

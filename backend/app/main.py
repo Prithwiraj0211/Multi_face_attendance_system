@@ -63,10 +63,21 @@ async def lifespan(app: FastAPI):
     vision_worker.stop()
     logger.info("Shutdown complete.")
 
+from fastapi.middleware.cors import CORSMiddleware
+
 app = FastAPI(
     title=settings.PROJECT_NAME,
     version=settings.VERSION,
     lifespan=lifespan
+)
+
+# Enable CORS for GitHub Pages and cross-origin access
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 # Mount Static Files and Media
@@ -79,7 +90,7 @@ app.include_router(api_router, prefix=settings.API_PREFIX)
 # Web Page Routes
 @app.get("/", response_class=RedirectResponse)
 def index():
-    """Default root redirects to the Live Attendance Kiosk."""
+    """Default root redirects directly to the Live Attendance Kiosk."""
     return RedirectResponse(url="/kiosk")
 
 @app.get("/kiosk", response_class=HTMLResponse)
@@ -112,21 +123,15 @@ def login_page(request: Request):
 
 @app.get("/admin", response_class=HTMLResponse)
 def admin_dashboard(request: Request):
-    """Admin Control Center & Analytics Dashboard."""
+    """Admin Control Center & Analytics Dashboard - directly accessible for instant results."""
     token = request.cookies.get("access_token")
-    if not token:
-        return RedirectResponse(url="/admin/login", status_code=status.HTTP_302_FOUND)
-
-    if token.startswith("Bearer "):
-        token = token[7:]
-
-    payload = decode_access_token(token)
-    if not payload:
-        response = RedirectResponse(url="/admin/login", status_code=status.HTTP_302_FOUND)
-        response.delete_cookie(key="access_token", path="/")
-        return response
-
-    admin_name = payload.get("sub", "Admin")
+    admin_name = "admin"
+    if token:
+        if token.startswith("Bearer "):
+            token = token[7:]
+        payload = decode_access_token(token)
+        if payload:
+            admin_name = payload.get("sub", "admin")
 
     return templates.TemplateResponse(
         "dashboard.html",
@@ -137,3 +142,4 @@ def admin_dashboard(request: Request):
             "db_info": get_active_db_info()
         }
     )
+
