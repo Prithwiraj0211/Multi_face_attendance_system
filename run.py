@@ -52,13 +52,35 @@ def main():
         print("[+] Models verified and ready.")
 
     local_ip = get_local_ip()
+    public_url = None
 
-    print(f"\n[+] SERVER ACCESS URLS (Available on ANY connected Wi-Fi / LAN device):")
-    print(f"   > Local Kiosk:      http://127.0.0.1:8000/kiosk")
-    print(f"   > Wi-Fi / LAN Kiosk:http://{local_ip}:8000/kiosk")
-    print(f"   > Admin Portal:     http://127.0.0.1:8000/admin")
-    print(f"   > Initial Login:    Username: admin  |  Password: admin123")
-    print(f"   > Interactive API:  http://127.0.0.1:8000/docs")
+    if "--public" in sys.argv or "--tunnel" in sys.argv:
+        try:
+            from backend.app.core.tunnel import start_public_tunnel
+            print("[*] Generating instant public HTTPS tunnel...")
+            public_url = start_public_tunnel(port=8000)
+        except Exception as e:
+            print(f"[!] Could not initialize public tunnel: {e}")
+
+    print(f"\n[+] SERVER ACCESS URLS:")
+    print(f"   > Local Kiosk:       http://127.0.0.1:8000/kiosk")
+    print(f"   > Wi-Fi / LAN Kiosk: http://{local_ip}:8000/kiosk")
+    print(f"   > Admin Portal:      http://127.0.0.1:8000/admin")
+    print(f"   > Initial Login:     Username: admin  |  Password: admin123")
+    print(f"   > Interactive API:   http://127.0.0.1:8000/docs")
+
+    if public_url:
+        print("\n" + "=" * 70)
+        print("  🌐 WORLDWIDE PUBLIC ACCESS (SHAREABLE GITHUB / DEMO LINK)")
+        print("=" * 70)
+        print(f"   > Public Kiosk:      {public_url}/kiosk")
+        print(f"   > Public Dashboard:  {public_url}/admin")
+        print("  (This link works from ANY phone, laptop, or browser in the world!)")
+        print("=" * 70)
+    else:
+        print("\n[TIP] Want a worldwide public link to put on GitHub?")
+        print("      Run: python run.py --public")
+
     print("-" * 70)
     print("[*] Launching FastAPI server...\n")
 
@@ -73,3 +95,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+

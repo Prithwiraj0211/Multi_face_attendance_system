@@ -1,5 +1,13 @@
 # VisionPass - Multi-Face AI Attendance Recognition System
 
+<p align="left">
+  <img src="https://img.shields.io/badge/Python-3.10%2B-blue.svg?logo=python" alt="Python Version" />
+  <img src="https://img.shields.io/badge/FastAPI-0.115%2B-009688.svg?logo=fastapi" alt="FastAPI" />
+  <img src="https://img.shields.io/badge/OpenCV-YuNet%20%7C%20SFace-5C3EE8.svg?logo=opencv" alt="OpenCV" />
+  <img src="https://img.shields.io/badge/Database-PostgreSQL%20%7C%20SQLite-336791.svg?logo=postgresql" alt="Database" />
+  <img src="https://img.shields.io/badge/WebSockets-Real--Time-success.svg" alt="WebSockets" />
+</p>
+
 A production-grade, multi-face biometric attendance recognition system built with **FastAPI**, **OpenCV**, **Deep Learning (YuNet + SFace/ArcFace ONNX)**, **PostgreSQL** (with self-healing SQLite fallback), and a modern glassmorphic web portal featuring both a **Full-Screen Live Attendance Kiosk** and a comprehensive **Admin Management Dashboard**.
 
 Unlike traditional single-face systems, this system is capable of detecting and recognizing **multiple employees in a single camera frame simultaneously** in real-time, executing smart debouncing to prevent duplicate punches, validating liveness to reject photo/screen spoofs, and persisting encrypted vector embeddings.
@@ -37,6 +45,15 @@ Unlike traditional single-face systems, this system is capable of detecting and 
 
 ## System Architecture
 
+<div align="center">
+  <img src="docs/assets/system_architecture.svg" alt="VisionPass System Architecture" width="100%" />
+</div>
+
+<br/>
+
+<details>
+<summary>📐 <b>Click to view Architecture Flowchart (Mermaid Source)</b></summary>
+
 ```mermaid
 flowchart TD
     subgraph Kiosk["1. Video Ingestion & Display"]
@@ -54,14 +71,14 @@ flowchart TD
     end
 
     subgraph Logic["3. Debounce & State Machine"]
-        MATCH --> DEBOUNCE{"In Cooldown Tracker?\n(< 5 min)"}
+        MATCH --> DEBOUNCE{"In Cooldown Tracker?<br/>(&lt; 5 min)"}
         DEBOUNCE -- Yes --> SKIP["Skip Duplicate Write"]
-        DEBOUNCE -- No --> STATE{"Determine Punch Type\n(CHECK_IN / CHECK_OUT)"}
+        DEBOUNCE -- No --> STATE{"Determine Punch Type<br/>(CHECK_IN / CHECK_OUT)"}
         STATE --> SNAP["Save Photo Proof Snapshot"]
     end
 
     subgraph Persistence["4. Encrypted Database"]
-        STATE --> DB[("Database (PostgreSQL / SQLite)\n- Employees Table\n- Face Embeddings\n- Attendance Logs")]
+        STATE --> DB[("Database: PostgreSQL / SQLite<br/>• Employees Table<br/>• Face Embeddings<br/>• Attendance Logs")]
     end
 
     subgraph Broadcast["5. Real-Time Distribution"]
@@ -70,6 +87,8 @@ flowchart TD
         WS --> DASH["Admin Dashboard (Live Counters & Ticker)"]
     end
 ```
+
+</details>
 
 ---
 
@@ -102,7 +121,7 @@ DATABASE_URL=postgresql://postgres:postgres@localhost:5432/attendance_db
 1. Create a free project on [Supabase](https://supabase.com) or [Neon](https://neon.tech).
 2. Copy the connection string into `.env`:
    ```env
-   DATABASE_URL=postgresql://user:password@ep-xyz.us-east-1.aws.neon.tech/attendance_db?sslmode=require
+   DATABASE_URL="postgresql://user:password@ep-xyz.us-east-1.aws.neon.tech/attendance_db?sslmode=require"
    ```
 
 > **Note:** If PostgreSQL is not active when you start the server, the system **automatically falls back to local SQLite** (`data/attendance.db`). You can start testing immediately without installing PostgreSQL first!
@@ -142,18 +161,25 @@ Once launched, access the following URLs in your browser:
 
 ---
 
-## Connecting Over Any Wi-Fi / Hotspot
+## Connecting Over Any Wi-Fi / Hotspot & Public Internet
 
-The server listens on `0.0.0.0:8000`. To access the Attendance Kiosk from any smartphone, tablet, or another computer on the same Wi-Fi:
+### Option 1: Over Local Wi-Fi / Hotspot
+The server listens on `0.0.0.0:8000`. To open the terminal on any phone, tablet, or laptop on the same Wi-Fi:
+1. Run `python run.py`.
+2. Open the Wi-Fi IP displayed in the terminal (e.g., `http://192.168.1.15:8000/kiosk`) on your mobile device.
 
-1. Check your local machine's IP address displayed in the terminal when running `python run.py` (e.g., `http://192.168.1.15:8000/kiosk`).
-2. Open that URL on any mobile device or tablet mounted at your office entrance.
-
-For access outside your local Wi-Fi over the public internet, you can use a free, secure tunnel:
+### Option 2: 🌐 Worldwide Public Link (For GitHub & Remote Demo)
+To generate an instant, worldwide secure HTTPS link connected directly to your live webcam machine:
 ```bash
-cloudflared tunnel --url http://127.0.0.1:8000
+python run.py --public
 ```
-This gives you a secure HTTPS URL (e.g., `https://your-domain.trycloudflare.com`) accessible anywhere in the world.
+This automatically starts a secure Cloudflare Tunnel and prints public URLs:
+```text
+🌐 WORLDWIDE PUBLIC ACCESS (SHAREABLE GITHUB / DEMO LINK)
+   > Public Kiosk:      https://xxxx.trycloudflare.com/kiosk
+   > Public Dashboard:  https://xxxx.trycloudflare.com/admin
+```
+You can put this link directly in your GitHub repository's **About > Website** section so anyone visiting your GitHub can open the live capturing machine!
 
 ---
 
@@ -161,10 +187,11 @@ This gives you a secure HTTPS URL (e.g., `https://your-domain.trycloudflare.com`
 
 | Variable | Default | Description |
 | :--- | :--- | :--- |
-| `DATABASE_URL` | `postgresql://postgres:postgres@localhost:5432/attendance_db` | PostgreSQL connection URI |
-| `CAMERA_INDEX` | `0` | Camera device ID (0 for primary webcam, or RTSP URL) |
-| `FACE_MATCH_THRESHOLD` | `0.38` | SFace cosine similarity threshold |
+| `DATABASE_URL` | `postgresql://postgres:postgres@`<br>`localhost:5432/attendance_db` | PostgreSQL connection URI |
+| `CAMERA_INDEX` | `0` | Camera device ID (0 for webcam, or RTSP URL) |
+| `FACE_MATCH_THRESHOLD` | `0.38` | SFace cosine similarity cutoff |
 | `FACE_DETECTOR_CONF_THRESHOLD` | `0.60` | YuNet detection confidence cutoff |
-| `PUNCH_COOLDOWN_SECONDS` | `300` | Cooldown period before a duplicate punch is allowed (5 min) |
+| `PUNCH_COOLDOWN_SECONDS` | `300` | Cooldown period before repeat punch (5 min) |
 | `ADMIN_USERNAME` | `admin` | Default admin username |
 | `ADMIN_PASSWORD` | `admin123` | Default admin password |
+

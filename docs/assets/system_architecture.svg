@@ -1,0 +1,223 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 680" width="100%" height="100%" style="background:#0f172a; border-radius:12px; font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
+  <defs>
+    <!-- Gradients -->
+    <linearGradient id="headerGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#38bdf8" />
+      <stop offset="100%" stop-color="#818cf8" />
+    </linearGradient>
+    <linearGradient id="cardGrad1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1e293b" />
+      <stop offset="100%" stop-color="#0f172a" />
+    </linearGradient>
+    <linearGradient id="cyanPill" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#0284c7" />
+      <stop offset="100%" stop-color="#0ea5e9" />
+    </linearGradient>
+    <linearGradient id="purplePill" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#6366f1" />
+      <stop offset="100%" stop-color="#8b5cf6" />
+    </linearGradient>
+    <linearGradient id="emeraldPill" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#059669" />
+      <stop offset="100%" stop-color="#10b981" />
+    </linearGradient>
+    <linearGradient id="amberPill" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#d97706" />
+      <stop offset="100%" stop-color="#f59e0b" />
+    </linearGradient>
+
+    <!-- Drop Shadows -->
+    <filter id="shadow" x="-5%" y="-5%" width="110%" height="115%">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#000000" flood-opacity="0.45" />
+    </filter>
+
+    <!-- Arrow Marker -->
+    <marker id="arrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 8 5 L 0 9 z" fill="#38bdf8" />
+    </marker>
+    <marker id="arrow-emerald" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 8 5 L 0 9 z" fill="#10b981" />
+    </marker>
+    <marker id="arrow-purple" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 8 5 L 0 9 z" fill="#818cf8" />
+    </marker>
+  </defs>
+
+  <!-- Title Header Banner -->
+  <rect x="25" y="20" width="1050" height="60" rx="10" fill="#1e293b" stroke="#334155" stroke-width="1.5" />
+  <circle cx="55" cy="50" r="14" fill="#0284c7" />
+  <path d="M49 50 L53 54 L62 44" stroke="#ffffff" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round" />
+  <text x="80" y="55" font-size="20" font-weight="700" fill="url(#headerGrad)">VisionPass • System Architecture &amp; Real-Time Execution Pipeline</text>
+  <text x="870" y="55" font-size="12" font-weight="600" fill="#94a3b8">FastAPI • OpenCV • YuNet • SFace</text>
+
+  <!-- ================= SECTION 1: INGESTION & HUD ================= -->
+  <g transform="translate(25, 105)">
+    <rect width="240" height="545" rx="12" fill="url(#cardGrad1)" stroke="#38bdf8" stroke-width="1.5" filter="url(#shadow)" stroke-dasharray="0" />
+    <rect x="0" y="0" width="240" height="42" rx="12" fill="#0369a1" />
+    <rect x="0" y="30" width="240" height="12" fill="#0369a1" />
+    <text x="20" y="27" font-size="14" font-weight="700" fill="#ffffff">1. Video Ingestion &amp; HUD</text>
+
+    <!-- Node 1.1: Camera -->
+    <rect x="18" y="65" width="204" height="68" rx="8" fill="#1e293b" stroke="#0284c7" stroke-width="1.2" />
+    <text x="30" y="92" font-size="13" font-weight="700" fill="#38bdf8">Hardware Camera</text>
+    <text x="30" y="112" font-size="11" fill="#94a3b8">OpenCV VideoCapture(0) / RTSP</text>
+
+    <!-- Flow arrow -->
+    <path d="M120 133 L120 162" stroke="#38bdf8" stroke-width="2" marker-end="url(#arrow)" />
+
+    <!-- Node 1.2: Raw Video Frame -->
+    <rect x="18" y="165" width="204" height="65" rx="8" fill="#1e293b" stroke="#334155" stroke-width="1" />
+    <text x="30" y="192" font-size="13" font-weight="700" fill="#f1f5f9">Raw Video Buffer</text>
+    <text x="30" y="212" font-size="11" fill="#94a3b8">RGB 30–60 FPS Stream</text>
+
+    <!-- Flow arrow split -->
+    <path d="M120 230 L120 262" stroke="#38bdf8" stroke-width="2" marker-end="url(#arrow)" />
+
+    <!-- Node 1.3: Cyber HUD -->
+    <rect x="18" y="265" width="204" height="70" rx="8" fill="#1e293b" stroke="#334155" stroke-width="1" />
+    <text x="30" y="292" font-size="13" font-weight="700" fill="#38bdf8">Cyber HUD Overlay</text>
+    <text x="30" y="312" font-size="11" fill="#94a3b8">Target Reticles, Names, FPS</text>
+
+    <!-- Flow arrow -->
+    <path d="M120 335 L120 368" stroke="#38bdf8" stroke-width="2" marker-end="url(#arrow)" />
+
+    <!-- Node 1.4: MJPEG Stream -->
+    <rect x="18" y="370" width="204" height="75" rx="8" fill="#1e293b" stroke="#0ea5e9" stroke-width="1.2" />
+    <text x="30" y="398" font-size="13" font-weight="700" fill="#e0f2fe">MJPEG Stream</text>
+    <text x="30" y="418" font-size="11" fill="#7dd3fc">/api/stream/video_feed</text>
+    <text x="30" y="433" font-size="10" fill="#94a3b8">Zero client latency</text>
+
+    <rect x="18" y="475" width="204" height="50" rx="8" fill="#0c4a6e" stroke="#0284c7" stroke-width="1" />
+    <text x="30" y="497" font-size="11" font-weight="600" fill="#bae6fd">Output Target:</text>
+    <text x="30" y="513" font-size="11" fill="#e0f2fe">Live Kiosk Terminal Screen</text>
+  </g>
+
+  <!-- Flow connector from Section 1 to Section 2 -->
+  <path d="M265 305 L292 305" stroke="#38bdf8" stroke-width="2.5" marker-end="url(#arrow)" />
+
+  <!-- ================= SECTION 2: AI DEEP LEARNING PIPELINE ================= -->
+  <g transform="translate(295, 105)">
+    <rect width="250" height="545" rx="12" fill="url(#cardGrad1)" stroke="#818cf8" stroke-width="1.5" filter="url(#shadow)" />
+    <rect x="0" y="0" width="250" height="42" rx="12" fill="#4338ca" />
+    <rect x="0" y="30" width="250" height="12" fill="#4338ca" />
+    <text x="20" y="27" font-size="14" font-weight="700" fill="#ffffff">2. AI Multi-Face Pipeline</text>
+
+    <!-- Node 2.1: YuNet Detector -->
+    <rect x="18" y="55" width="214" height="65" rx="8" fill="#1e293b" stroke="#6366f1" stroke-width="1.2" />
+    <text x="28" y="80" font-size="13" font-weight="700" fill="#c7d2fe">YuNet Multi-Face ONNX</text>
+    <text x="28" y="100" font-size="11" fill="#94a3b8">Detects 5–10+ faces in frame</text>
+
+    <path d="M125 120 L125 142" stroke="#818cf8" stroke-width="2" marker-end="url(#arrow-purple)" />
+
+    <!-- Node 2.2: Face Alignment -->
+    <rect x="18" y="145" width="214" height="65" rx="8" fill="#1e293b" stroke="#334155" stroke-width="1" />
+    <text x="28" y="170" font-size="13" font-weight="700" fill="#e0e7ff">5-Point Landmark Align</text>
+    <text x="28" y="190" font-size="11" fill="#94a3b8">Eyes, nose, mouth rotation norm</text>
+
+    <path d="M125 210 L125 232" stroke="#818cf8" stroke-width="2" marker-end="url(#arrow-purple)" />
+
+    <!-- Node 2.3: Anti-Spoofing -->
+    <rect x="18" y="235" width="214" height="65" rx="8" fill="#1e293b" stroke="#334155" stroke-width="1" />
+    <text x="28" y="260" font-size="13" font-weight="700" fill="#f43f5e">Anti-Spoofing &amp; Liveness</text>
+    <text x="28" y="280" font-size="11" fill="#94a3b8">Laplacian variance &amp; screen check</text>
+
+    <path d="M125 300 L125 322" stroke="#818cf8" stroke-width="2" marker-end="url(#arrow-purple)" />
+
+    <!-- Node 2.4: SFace Embedding -->
+    <rect x="18" y="325" width="214" height="65" rx="8" fill="#1e293b" stroke="#6366f1" stroke-width="1.2" />
+    <text x="28" y="350" font-size="13" font-weight="700" fill="#c7d2fe">SFace Embedding Extractor</text>
+    <text x="28" y="370" font-size="11" fill="#94a3b8">Normalized 128-D vector output</text>
+
+    <path d="M125 390 L125 412" stroke="#818cf8" stroke-width="2" marker-end="url(#arrow-purple)" />
+
+    <!-- Node 2.5: Cosine Matcher -->
+    <rect x="18" y="415" width="214" height="75" rx="8" fill="#1e293b" stroke="#818cf8" stroke-width="1.5" />
+    <text x="28" y="440" font-size="13" font-weight="700" fill="#a5b4fc">Cosine Similarity Matcher</text>
+    <text x="28" y="460" font-size="11" fill="#94a3b8">Threshold ≥ 0.38 cutoff</text>
+    <text x="28" y="475" font-size="10" fill="#6ee7b7">Matched Employee Identity</text>
+  </g>
+
+  <!-- Flow connector from Section 2 to Section 3 -->
+  <path d="M545 375 L572 375" stroke="#818cf8" stroke-width="2.5" marker-end="url(#arrow-purple)" />
+
+  <!-- ================= SECTION 3: DEBOUNCE & LOGIC ================= -->
+  <g transform="translate(575, 105)">
+    <rect width="240" height="545" rx="12" fill="url(#cardGrad1)" stroke="#10b981" stroke-width="1.5" filter="url(#shadow)" />
+    <rect x="0" y="0" width="240" height="42" rx="12" fill="#047857" />
+    <rect x="0" y="30" width="240" height="12" fill="#047857" />
+    <text x="20" y="27" font-size="14" font-weight="700" fill="#ffffff">3. Debounce &amp; State Logic</text>
+
+    <!-- Node 3.1: Cooldown Check -->
+    <rect x="18" y="65" width="204" height="75" rx="8" fill="#1e293b" stroke="#059669" stroke-width="1.2" />
+    <text x="28" y="90" font-size="13" font-weight="700" fill="#6ee7b7">Cooldown Check</text>
+    <text x="28" y="110" font-size="11" fill="#94a3b8">Is in Cooldown Tracker?</text>
+    <text x="28" y="125" font-size="10" fill="#fbbf24">Default cooldown: 5 minutes</text>
+
+    <!-- Branching -->
+    <path d="M120 140 L120 180" stroke="#10b981" stroke-width="2" marker-end="url(#arrow-emerald)" />
+
+    <!-- Node 3.2: Filter Duplicates -->
+    <rect x="18" y="182" width="204" height="60" rx="8" fill="#1e293b" stroke="#e11d48" stroke-width="1" />
+    <text x="28" y="206" font-size="12" font-weight="700" fill="#fda4af">If in cooldown → Skip</text>
+    <text x="28" y="226" font-size="11" fill="#94a3b8">Prevents duplicate DB writes</text>
+
+    <path d="M120 242 L120 282" stroke="#10b981" stroke-width="2" marker-end="url(#arrow-emerald)" />
+
+    <!-- Node 3.3: Punch State Machine -->
+    <rect x="18" y="285" width="204" height="78" rx="8" fill="#1e293b" stroke="#10b981" stroke-width="1.5" />
+    <text x="28" y="310" font-size="13" font-weight="700" fill="#a7f3d0">State Determination</text>
+    <text x="28" y="330" font-size="11" fill="#94a3b8">1st seen today → CHECK_IN</text>
+    <text x="28" y="347" font-size="11" fill="#94a3b8">Subsequent → CHECK_OUT</text>
+
+    <path d="M120 363 L120 405" stroke="#10b981" stroke-width="2" marker-end="url(#arrow-emerald)" />
+
+    <!-- Node 3.4: Photo Proof Snapshot -->
+    <rect x="18" y="408" width="204" height="65" rx="8" fill="#1e293b" stroke="#334155" stroke-width="1" />
+    <text x="28" y="433" font-size="13" font-weight="700" fill="#f1f5f9">Photo Proof Snapshot</text>
+    <text x="28" y="453" font-size="11" fill="#94a3b8">Compressed JPG proof saved</text>
+  </g>
+
+  <!-- Flow connector from Section 3 to Section 4 & 5 -->
+  <path d="M815 325 L842 245" stroke="#10b981" stroke-width="2.5" marker-end="url(#arrow-emerald)" />
+  <path d="M815 450 L842 490" stroke="#10b981" stroke-width="2.5" marker-end="url(#arrow)" />
+
+  <!-- ================= SECTION 4: ENCRYPTED DATABASE ================= -->
+  <g transform="translate(845, 105)">
+    <rect width="230" height="255" rx="12" fill="url(#cardGrad1)" stroke="#f59e0b" stroke-width="1.5" filter="url(#shadow)" />
+    <rect x="0" y="0" width="230" height="42" rx="12" fill="#b45309" />
+    <rect x="0" y="30" width="230" height="12" fill="#b45309" />
+    <text x="18" y="27" font-size="14" font-weight="700" fill="#ffffff">4. Dual Persistence DB</text>
+
+    <rect x="15" y="55" width="200" height="65" rx="8" fill="#1e293b" stroke="#d97706" stroke-width="1.2" />
+    <text x="25" y="80" font-size="13" font-weight="700" fill="#fde68a">PostgreSQL (Primary)</text>
+    <text x="25" y="100" font-size="11" fill="#94a3b8">Local or Cloud (Neon/Supabase)</text>
+
+    <rect x="15" y="130" width="200" height="50" rx="8" fill="#1e293b" stroke="#334155" stroke-width="1" />
+    <text x="25" y="152" font-size="12" font-weight="700" fill="#cbd5e1">Self-Healing Fallback</text>
+    <text x="25" y="168" font-size="11" fill="#94a3b8">Auto SQLite (zero downtime)</text>
+
+    <text x="25" y="205" font-size="11" font-weight="600" fill="#fbbf24">• Employees Table (BCrypt)</text>
+    <text x="25" y="222" font-size="11" font-weight="600" fill="#fbbf24">• 128-D Vector Embeddings</text>
+    <text x="25" y="239" font-size="11" font-weight="600" fill="#fbbf24">• Immutable Attendance Logs</text>
+  </g>
+
+  <!-- ================= SECTION 5: REAL-TIME BROADCAST ================= -->
+  <g transform="translate(845, 385)">
+    <rect width="230" height="265" rx="12" fill="url(#cardGrad1)" stroke="#38bdf8" stroke-width="1.5" filter="url(#shadow)" />
+    <rect x="0" y="0" width="230" height="42" rx="12" fill="#0284c7" />
+    <rect x="0" y="30" width="230" height="12" fill="#0284c7" />
+    <text x="18" y="27" font-size="14" font-weight="700" fill="#ffffff">5. Real-Time Broadcast</text>
+
+    <rect x="15" y="55" width="200" height="55" rx="8" fill="#1e293b" stroke="#0ea5e9" stroke-width="1.2" />
+    <text x="25" y="78" font-size="12" font-weight="700" fill="#7dd3fc">WebSocket Broadcaster</text>
+    <text x="25" y="96" font-size="11" fill="#94a3b8">/api/ws/live-events (Sub/Pub)</text>
+
+    <rect x="15" y="120" width="200" height="60" rx="8" fill="#1e293b" stroke="#334155" stroke-width="1" />
+    <text x="25" y="142" font-size="12" font-weight="700" fill="#e0f2fe">Kiosk Audio &amp; Voice</text>
+    <text x="25" y="160" font-size="11" fill="#94a3b8">Web Audio chime &amp; speech synthesis</text>
+
+    <rect x="15" y="190" width="200" height="60" rx="8" fill="#1e293b" stroke="#334155" stroke-width="1" />
+    <text x="25" y="212" font-size="12" font-weight="700" fill="#e0f2fe">Admin Dashboard</text>
+    <text x="25" y="230" font-size="11" fill="#94a3b8">Live counter increment &amp; feed</text>
+  </g>
+</svg>

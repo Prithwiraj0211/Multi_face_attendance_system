@@ -22,8 +22,13 @@ backend/weights/*.onnx
 .idea/
 *.swp
 
+# Binaries & Tunnels
+tools/
+*.exe
+
 # OS generated
 Thumbs.db
 ehthumbs.db
 Desktop.ini
 $RECYCLE.BIN/
+
